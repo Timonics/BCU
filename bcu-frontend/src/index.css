@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.home-background {
+  background: linear-gradient(145deg, #fafcff, #8bbbf6cc);
+}
+
+.auth-background {
+  background: linear-gradient(145deg, #7ec1f8d0, #97dff99c);
+}
+
+.gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.my-scrollbar::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Track background */
+}
+
+/* Global scrollbar styles */
+body::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+  background: #5a6063; /* Color of the scrollbar track */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #b5c5bcb9; /* Color of the scrollbar thumb */
+  border-radius: 20px; /* Rounded corners on the thumb */
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #84c6ef; /* Thumb hover color */
+}
+
+/* Custom scrollbar for specific elements */
+.my-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.my-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #a0aec0; /* Thumb color */
+  border-radius: 20px; /* Rounded corners */
+}
+
+.my-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #82b197; /* Thumb hover color */
+}
+
+/* Hiding scrollbar for specific elements */
+.no-scroll::-webkit-scrollbar {
+  display: none;
+}
