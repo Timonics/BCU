@@ -15,6 +15,7 @@ import Members from "../pages/members/index.tsx";
 
 const router = createBrowserRouter([
   {
+    // Redirect to / if user is authenticated
     path: "auth",
     element: <RedirectRoute />,
     children: [
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
     ],
   },
   {
+    // Redirect to /auth if user is not authenticated
     path: "/",
     element: <ProtectedRoute />,
     children: [
