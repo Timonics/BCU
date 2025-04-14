@@ -12,6 +12,14 @@ import AuthProvider from "../contexts/AuthProvider.tsx";
 import HomeLayout from "../layouts/HomeLayout.tsx";
 import Dashboard from "../pages/dashboard/index.tsx";
 import Members from "../pages/members/index.tsx";
+import LeaderShip from "../pages/leadership/index.tsx";
+import Bands from "../pages/bands/index.tsx";
+import Units from "../pages/units/index.tsx";
+import AddMember from "../pages/members/add-member/AddMember.tsx";
+import Academics from "../pages/members/add-member/Academics.tsx";
+import ChurchInfo from "../pages/members/add-member/ChurchInfo.tsx";
+import PersonalInfo from "../pages/members/add-member/PersonalInfo.tsx";
+import Summary from "../pages/members/add-member/Summary.tsx";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +49,25 @@ const router = createBrowserRouter([
         element: <HomeLayout />,
         children: [
           { path: "", element: <Dashboard /> },
-          { path: "members", element: <Members /> },
+          {
+            path: "members",
+            element: <Members />,
+            children: [
+              {
+                path: "add-member",
+                element: <AddMember />,
+                children: [
+                  { path: "", element: <PersonalInfo /> },
+                  { path: "church-info", element: <ChurchInfo /> },
+                  { path: "academics-info", element: <Academics /> },
+                  { path: "summary", element: <Summary /> },
+                ],
+              },
+            ],
+          },
+          { path: "leadership", element: <LeaderShip /> },
+          { path: "bands", element: <Bands /> },
+          { path: "units", element: <Units /> },
         ],
       },
     ],

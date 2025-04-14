@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import dashLogo from "../../assets/dashLogo.png";
 import {
@@ -7,134 +7,59 @@ import {
   TbLogout,
   TbSettings,
   TbUser,
-  TbUsers,
-  TbUsersGroup,
 } from "react-icons/tb";
-import { LuBoxes, LuCrown, LuLayers } from "react-icons/lu";
-import { PiNotebookBold } from "react-icons/pi";
+
 import { NavLink } from "react-router";
+import { navItems } from "../../utils/navItems";
 
 const Nav: React.FC = () => {
-  //Not Finished Yet....
-  const [dropdownOpened, setDropdownOpened] = useState<boolean>(false);
-
-  const toggleDropdown = (itemIndex: number) => {};
-
-  const navItems = [
-    {
-      name: "Members",
-      icon: <TbUsers />,
-      link: "members",
-      dropdown: [
-        {
-          name: "Add Member",
-          link: "/add-member",
-        },
-        {
-          name: "Members List",
-          link: "/members-list",
-        },
-      ],
-    },
-    {
-      name: "Leadership",
-      icon: <LuCrown />,
-      link: "leadership",
-      dropdown: [
-        {
-          name: "Leadership Title",
-          link: "/add-leadership",
-        },
-        {
-          name: "All Assigned Leaders",
-          link: "/assigned-leaders",
-        },
-      ],
-    },
-    {
-      name: "Bands",
-      icon: <LuBoxes />,
-      link: "bands",
-      dropdown: [
-        {
-          name: "Create Band",
-          link: "/create-band",
-        },
-        {
-          name: "Band List",
-          link: "/bands-list",
-        },
-      ],
-    },
-    {
-      name: "Units",
-      icon: <LuLayers />,
-      link: "units",
-      dropdown: [
-        {
-          name: "Create Unit",
-          link: "/create-unit",
-        },
-        {
-          name: "Unit List",
-          link: "/units-list",
-        },
-      ],
-    },
-    {
-      name: "Class Management",
-      icon: <PiNotebookBold />,
-      link: "class-management",
-      dropdown: [
-        {
-          name: "Add New Class",
-          link: "/add-class",
-        },
-        {
-          name: "Baptismal",
-          link: "/baptismal",
-        },
-        {
-          name: "ETS",
-          link: "/ets",
-        },
-        {
-          name: "Pre-Youth",
-          link: "/pre-youth",
-        },
-      ],
-    },
-    {
-      name: "Comittees",
-      icon: <TbUsersGroup />,
-      link: "",
-      dropdown: [
-        {
-          name: "Add New Committee",
-          link: "/add-committee",
-        },
-      ],
-    },
-  ];
+  const [dropdownOpenedIndex, setDropdownOpenedIndex] = useState<number | null>(
+    null
+  );
+  const [dashIsActive, setDashIsActive] = useState<boolean>(true);
 
   const navItemsElement = navItems.map((item, index) => {
+    const isOpen = dropdownOpenedIndex === index;
+
+    const Icon = item.icon;
     return (
-      <NavLink
-        key={index}
-        to={item.link}
-        className={`flex items-center gap-3 p-2.5 relative`}
-      >
-        {item.icon}
-        <p className="text-[12px] font-semibold pops">{item.name}</p>
-        <TbChevronDown className="ml-auto cursor-auto" onClick={() => {}} />
-        {dropdownOpened && (
+      <div className="relative">
+        <NavLink
+          key={index}
+          to={item.link}
+          className={({ isActive }) =>
+            `flex items-center gap-3 p-2.5 pl-4 pops relative ${
+              isActive
+                ? "bg-[#009AF4]/30 text-[#009AF4] text-sm font-bold"
+                : "text-[12px] font-semibold text-[#252b35]"
+            }`
+          }
+          onClick={() => {
+            setDashIsActive(false);
+          }}
+        >
+          {/* <div
+            className={`absolute w-[6px] h-full right-0 rounded-l-lg bg-[#009AF4]`}
+          /> */}
+          <Icon />
+          {item.name}
+          <TbChevronDown
+            className="ml-auto cursor-auto"
+            onClick={(e) => {
+              e.preventDefault();
+              setDropdownOpenedIndex(isOpen ? null : index);
+            }}
+          />
+        </NavLink>
+        {isOpen && (
           <div className="absolute top-full left-0 w-full bg-white border rounded-lg z-10">
             {item.dropdown.map((dropdownItem, index) => {
               return (
                 <NavLink
                   key={index}
                   to={dropdownItem.link}
-                  className={`flex items-center gap-3 p-2.5`}
+                  className={`flex items-center gap-3 p-2.5 pl-4`}
+                  onClick={() => setDropdownOpenedIndex(null)}
                 >
                   <p className="text-[12px] font-semibold">
                     {dropdownItem.name}
@@ -144,38 +69,74 @@ const Nav: React.FC = () => {
             })}
           </div>
         )}
-      </NavLink>
+      </div>
     );
   });
 
   return (
-    <div className="flex flex-col bg-slate-100 h-full gap-5 p-3">
-      <img src={dashLogo} className="size-10" />
-      <div className="flex gap-3 items-center">
+    <div className="flex flex-col bg-slate-100 h-full gap-5">
+      <img src={dashLogo} className="size-10 mx-3 mt-3" />
+      <div className="flex gap-3 items-center px-3 mb-1">
         <div className="bg-slate-400 flex items-center justify-center text-2xl size-[45px] rounded-full">
           <TbUser />
         </div>
         <div className="flex flex-col">
-          <h1 className="xl:text-lg text-sm font-bold pops">Oderinde Michael</h1>
+          <h1 className="xl:text-lg text-sm font-bold pops">
+            Oderinde Michael
+          </h1>
           <p className="xl:text-sm text-xs">Admin</p>
         </div>
       </div>
       <div className="h-full flex flex-col items-center justify-between">
         <div className="flex flex-col gap-1 w-full">
-          <NavLink to={""} className={`flex items-center gap-3 p-2.5`}>
+          <NavLink
+            end
+            to={""}
+            className={({ isActive }) =>
+              `flex items-center gap-3 p-2.5 pl-4 pops relative ${
+                isActive
+                  ? "bg-[#009AF4]/30 text-[#009AF4] text-sm font-bold"
+                  : "text-[12px] font-semibold text-[#252b35]"
+              }`
+            }
+            onClick={() => {
+              setDashIsActive(true);
+            }}
+          >
+            {/* {dashIsActive && (
+              <div className="absolute w-[6px] h-full right-0 rounded-l-lg bg-[#009AF4]" />
+            )} */}
             <TbLayoutDashboard />
-            <p className="text-[12px] font-semibold pops">Dashboard</p>
+            Dashboard
           </NavLink>
           <div className="flex flex-col gap-1 w-full">{navItemsElement}</div>
         </div>
         <div className="flex flex-col w-full">
-          <NavLink to={""} className={`flex items-center gap-3 p-2.5`}>
+          <NavLink
+            to={"logout"}
+            className={({ isActive }) =>
+              `flex items-center gap-3 p-2.5 pl-4 pops ${
+                isActive
+                  ? "bg-[#009AF4]/30 text-[#009AF4] text-sm font-bold"
+                  : "text-[12px] font-semibold "
+              }`
+            }
+          >
             <TbLogout />
-            <p className="text-[12px] font-semibold pops">Logout</p>
+            Logout
           </NavLink>
-          <NavLink to={""} className={`flex items-center gap-3 p-2.5`}>
+          <NavLink
+            to={"settings"}
+            className={({ isActive }) =>
+              `flex items-center gap-3 p-2.5 pl-4 pops ${
+                isActive
+                  ? "bg-[#009AF4]/30 text-[#009AF4] text-sm font-bold"
+                  : "text-[12px] font-semibold "
+              }`
+            }
+          >
             <TbSettings />
-            <p className="text-[12px] font-semibold pops">Settings</p>
+            Settings
           </NavLink>
         </div>
       </div>
