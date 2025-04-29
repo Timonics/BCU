@@ -1,16 +1,31 @@
 import React, { createContext, useState } from "react";
 import { AppProps } from "../interfaces";
-import { AuthState } from "../interfaces/auth";
+import {
+  AdminSignInData,
+  AdminSignUpData,
+  AuthState,
+} from "../interfaces/auth";
+//import axios from "axios"
 
 export const AuthContext = createContext<AuthState | null>(null);
 
 const AuthProvider: React.FC<AppProps> = ({ children }) => {
-  //Authentication logic is not implemented yet
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
 
-  //user authentication logic will be implemented here
+  const adminSignUp = async (adminData: AdminSignUpData) => {
+    console.log(adminData);
+  };
 
-  const contextValues = { isAuthenticated };
+  const adminSignIn = async (adminData: AdminSignInData) => {
+    console.log(adminData);
+  };
+
+  const contextValues = {
+    isAuthenticated,
+    adminSignUp,
+    adminSignIn,
+    setIsAuthenticated,
+  };
   return (
     <AuthContext.Provider value={contextValues}>
       {children}

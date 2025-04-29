@@ -30,7 +30,7 @@ const Login: React.FC = () => {
             className="outline-none focus:border-[#009AF4] p-2 w-full rounded-lg border-[1.33px] border-black/30"
           />
           <Link
-            to={"../forgot-password"}
+            to={"forgot-password"}
             className="text-end font-bold text-[#009AF4] text-[13px] cursor-pointer"
           >
             Forgot password?

@@ -27,3 +27,46 @@ export const leadershipData: LeadershipAnalytics[] = [
     date_created: Date().slice(4, 15),
   },
 ];
+
+export const leadershipMembers = [
+  {
+    title: "Captain",
+    name: "John Doe",
+    mobile_number: "1234567890",
+    marital_status: "Married",
+    birthday: "01/01/1990",
+    location: "New York",
+  },
+  {
+    title: "Vice Captain",
+    name: "John Doe",
+    mobile_number: "1234567890",
+    marital_status: "Married",
+    birthday: "01/01/1990",
+    location: "New York",
+  },
+  {
+    title: "Secretary",
+    name: "John Doe",
+    mobile_number: "1234567890",
+    marital_status: "Single",
+    birthday: "01/01/1990",
+    location: "New York",
+  },
+  {
+    title: "Assistant Secretary",
+    name: "John Doe",
+    mobile_number: "1234567890",
+    marital_status: "Married",
+    birthday: "01/01/1990",
+    location: "New York",
+  },
+  {
+    title: "Head of Band",
+    name: "John Doe",
+    mobile_number: "1234567890",
+    marital_status: "Single",
+    birthday: "01/01/1990",
+    location: "New York",
+  },
+];

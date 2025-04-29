@@ -13,13 +13,16 @@ import HomeLayout from "../layouts/HomeLayout.tsx";
 import Dashboard from "../pages/dashboard/index.tsx";
 import Members from "../pages/members/index.tsx";
 import LeaderShip from "../pages/leadership/index.tsx";
-import Bands from "../pages/bands/index.tsx";
+import Bands from "../pages/bands";
 import Units from "../pages/units/index.tsx";
 import AddMember from "../pages/members/add-member/AddMember.tsx";
 import Academics from "../pages/members/add-member/Academics.tsx";
 import ChurchInfo from "../pages/members/add-member/ChurchInfo.tsx";
 import PersonalInfo from "../pages/members/add-member/PersonalInfo.tsx";
 import Summary from "../pages/members/add-member/Summary.tsx";
+import ClassManagement from "../pages/class-management/index.tsx";
+import Comittees from "../pages/comittees/index.tsx";
+import StateProvider from "../contexts/StateProvider.tsx";
 
 const router = createBrowserRouter([
   {
@@ -68,6 +71,8 @@ const router = createBrowserRouter([
           { path: "leadership", element: <LeaderShip /> },
           { path: "bands", element: <Bands /> },
           { path: "units", element: <Units /> },
+          { path: "class-management", element: <ClassManagement /> },
+          { path: "comittees", element: <Comittees /> },
         ],
       },
     ],
@@ -77,7 +82,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <StateProvider>
+        <RouterProvider router={router} />
+      </StateProvider>
     </AuthProvider>
   </StrictMode>
 );
