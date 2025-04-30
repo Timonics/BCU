@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TbPencil, TbSearch } from "react-icons/tb";
 import Button from "../../components/button";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { genders, classes } from "../../utils/listings";
+import { genders, classes, comittees } from "../../utils/listings";
 
 type BandProps = {
   comitteeName: string;
@@ -35,7 +35,7 @@ const ComitteeInfo: React.FC<BandProps> = ({
   const [classIsOpen, setClassIsOpen] = useState<boolean>(false);
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col w-full">
       <div className="flex w-full gap-2 py-4">
         <div className="w-1/4 bg-[#F9FAFB] border-[1.42px] flex flex-col gap-2 border-black/30 p-4 rounded-xl">
           <p className="text-xs text-black/75">Total Members</p>
@@ -50,7 +50,6 @@ const ComitteeInfo: React.FC<BandProps> = ({
           <p className="text-black/85 pops font-bold">172</p>
         </div>
       </div>
-
       <div
         className="flex items-center gap-3 py-4"
         onClick={() => {
@@ -111,18 +110,18 @@ const ComitteeInfo: React.FC<BandProps> = ({
             <MdKeyboardArrowDown className="absolute right-2" />
             {batchYearsIsOpen && (
               <ul className="absolute top-[40px] left-0 w-full bg-white rounded-lg">
-                {/* {units.map((unit, index) => (
+                {comittees.map((comittee, index) => (
                   <li
                     className={`p-2 text-[13px] text-[#404040] cursor-pointer ${
                       index !== 5 && "border-b border-[#979797]"
                     }`}
                     onClick={() => {
-                      setSelectedBatchYear(unit);
+                      setSelectedBatchYear(comittee);
                     }}
                   >
-                    {unit}
+                    {comittee}
                   </li>
-                ))} */}
+                ))}
               </ul>
             )}
           </div>
@@ -156,8 +155,7 @@ const ComitteeInfo: React.FC<BandProps> = ({
           </div>
         </div>
       </div>
-
-      <div className="flex justify-between items-center p-4 px-6 border rounded-lg border-black/30 bg-[#F9FAFB]">
+      <div className="flex justify-between items-center p-4 mb-4 px-6 border rounded-lg border-black/30 bg-[#F9FAFB]">
         <div className="flex flex-col gap-6 items-start">
           <p className="text-2xl font-bold">{comitteeName}</p>
           <Button Icon={TbPencil} text="Edit Class" />

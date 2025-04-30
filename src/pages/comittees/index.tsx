@@ -29,9 +29,11 @@ const Comittee: React.FC = () => {
     );
   });
   return (
-    <section className="flex flex-col gap-4 relative h-full">
+    <section className="flex flex-col relative h-full">
       <div className="flex gap-4 px-4">
-        <div className={`border-[1.42px] w-[230px] h-fit bg-[#F9FAFB] flex flex-col gap-2 border-black/30 rounded-xl mt-4`}>
+        <div
+          className={`border-[1.42px] w-[230px] h-fit bg-[#F9FAFB] flex flex-col gap-2 border-black/30 rounded-xl mt-4`}
+        >
           <p className="border-b border-black/30 p-4 text-xl font-bold flex gap-3 items-center">
             Comittees
           </p>
@@ -48,16 +50,18 @@ const Comittee: React.FC = () => {
             {classesElements}
           </div>
         </div>
-        
-          <ComitteeInfo
-            comitteeName={classesName}
-            comitteeYears={50}
-            nextAnniversary="21/08/2025"
-          />
+        <ComitteeInfo
+          comitteeName={classesName}
+          comitteeYears={50}
+          nextAnniversary="21/08/2025"
+        />
       </div>
       {isCreateNewClassOpen && (
         <>
-          <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-center border" onClick={() => setIsCreateNewClassOpen(false)}/>
+          <div
+            className="fixed inset-0 backdrop-blur-xs flex justify-center items-center border"
+            onClick={() => setIsCreateNewClassOpen(false)}
+          />
           <CreateNewComittee />
         </>
       )}

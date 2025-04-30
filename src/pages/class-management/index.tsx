@@ -30,7 +30,7 @@ const ClassManagement: React.FC = () => {
     );
   });
   return (
-    <section className="flex flex-col gap-4 relative h-full">
+    <section className="flex flex-col relative h-full">
       {!location.search && (
         <div className="flex w-full gap-2 p-4">
           <div className="w-1/4 bg-[#F9FAFB] border-[1.42px] flex flex-col gap-2 border-black/30 p-4 rounded-xl">

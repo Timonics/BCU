@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TbPencil, TbSearch } from "react-icons/tb";
 import Button from "../../components/button";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { genders, classes } from "../../utils/listings";
+import { genders, classes, units } from "../../utils/listings";
 
 type BandProps = {
   classesName: string;
@@ -111,7 +111,7 @@ const ClassInfo: React.FC<BandProps> = ({
             <MdKeyboardArrowDown className="absolute right-2" />
             {batchYearsIsOpen && (
               <ul className="absolute top-[40px] left-0 w-full bg-white rounded-lg">
-                {/* {units.map((unit, index) => (
+                {units.map((unit, index) => (
                   <li
                     className={`p-2 text-[13px] text-[#404040] cursor-pointer ${
                       index !== 5 && "border-b border-[#979797]"
@@ -122,7 +122,7 @@ const ClassInfo: React.FC<BandProps> = ({
                   >
                     {unit}
                   </li>
-                ))} */}
+                ))}
               </ul>
             )}
           </div>
@@ -180,18 +180,14 @@ const ClassInfo: React.FC<BandProps> = ({
         </div>
         <div className="p-4">
           <div className="grid grid-cols-7 p-4 py-4 gap-5 items-center">
-            <p className="text-black/90 text-xs font-bold pops">
-              Members ID
-            </p>
+            <p className="text-black/90 text-xs font-bold pops">Members ID</p>
             <p className="text-black/90 col-span-2 text-xs font-bold pops">
               Members Name
             </p>
             <p className="text-black/90 text-xs font-bold pops">
               Mobile Number
             </p>
-            <p className="text-black/90 text-xs font-bold pops">
-              Batch Year
-            </p>
+            <p className="text-black/90 text-xs font-bold pops">Batch Year</p>
             <p className="text-black/90 text-xs font-bold pops">Gender</p>
             <p className="text-black/90 text-xs font-bold pops">Action</p>
           </div>

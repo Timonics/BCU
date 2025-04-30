@@ -25,7 +25,7 @@ const PendingApprovals: React.FC = () => {
   ));
 
   return (
-    <div className="border-[1.42px] border-black/30 rounded-xl bg-[#d6edf9c7]">
+    <div className="border-[1.42px] border-black/30 rounded-xl bg-[#cfeff78e]">
       <p className="border-b border-black/30 p-4 text-sm flex gap-3 items-center">
         <BsExclamationCircle size={20} className="text-[#009AF4]" /> Pending
         Approvals ({pendingApprovalsMembers.length})

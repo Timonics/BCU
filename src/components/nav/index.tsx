@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import dashLogo from "../../assets/dashLogo.png";
 import {
@@ -16,11 +16,9 @@ const Nav: React.FC = () => {
   const [dropdownOpenedIndex, setDropdownOpenedIndex] = useState<number | null>(
     null
   );
-  const [dashIsActive, setDashIsActive] = useState<boolean>(true);
-
   const navItemsElement = navItems.map((item, index) => {
     const isOpen = dropdownOpenedIndex === index;
-
+    
     const Icon = item.icon;
     return (
       <div className="relative">
@@ -28,23 +26,18 @@ const Nav: React.FC = () => {
           key={index}
           to={item.link}
           className={({ isActive }) =>
-            `flex items-center gap-3 p-2.5 pl-4 pops relative ${
+            `flex items-center gap-3 p-2.5 pl-4 pops relative hover:bg-black/5 ${
               isActive
                 ? "bg-[#009AF4]/30 text-[#009AF4] text-sm font-bold"
                 : "text-[12px] font-semibold text-[#252b35]"
             }`
           }
-          onClick={() => {
-            setDashIsActive(false);
-          }}
+          
         >
-          {/* <div
-            className={`absolute w-[6px] h-full right-0 rounded-l-lg bg-[#009AF4]`}
-          /> */}
           <Icon />
           {item.name}
           <TbChevronDown
-            className="ml-auto cursor-auto"
+            className="ml-auto cursor-auto w-6 h-5"
             onClick={(e) => {
               e.preventDefault();
               setDropdownOpenedIndex(isOpen ? null : index);
@@ -52,16 +45,16 @@ const Nav: React.FC = () => {
           />
         </NavLink>
         {isOpen && (
-          <div className="absolute top-full left-0 w-full bg-white border rounded-lg z-10">
+          <div className="absolute top-full left-4 w-[80%] bg-[#F9FAFB] border border-[#009AF4] rounded-lg z-10">
             {item.dropdown.map((dropdownItem, index) => {
               return (
                 <NavLink
                   key={index}
                   to={dropdownItem.link}
-                  className={`flex items-center gap-3 p-2.5 pl-4`}
+                  className={`flex items-center gap-3 p-2.5 pl-4 hover:bg-black/5`}
                   onClick={() => setDropdownOpenedIndex(null)}
                 >
-                  <p className="text-[12px] font-semibold">
+                  <p className="text-[12px] font-semibold cursor-pointer">
                     {dropdownItem.name}
                   </p>
                 </NavLink>
@@ -74,7 +67,12 @@ const Nav: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col bg-slate-100 h-full gap-5">
+    <div
+      className="flex flex-col bg-slate-100 h-full gap-5"
+      onClick={() => {
+        if (dropdownOpenedIndex || dropdownOpenedIndex === 0) setDropdownOpenedIndex(null);
+      }}
+    >
       <img src={dashLogo} className="size-10 mx-3 mt-3" />
       <div className="flex gap-3 items-center px-3 mb-1">
         <div className="bg-slate-400 flex items-center justify-center text-2xl size-[45px] rounded-full">
@@ -99,9 +97,7 @@ const Nav: React.FC = () => {
                   : "text-[12px] font-semibold text-[#252b35]"
               }`
             }
-            onClick={() => {
-              setDashIsActive(true);
-            }}
+           
           >
             {/* {dashIsActive && (
               <div className="absolute w-[6px] h-full right-0 rounded-l-lg bg-[#009AF4]" />

@@ -28,3 +28,10 @@ export const units = [
 ];
 
 export const classes = ["ETS", "Baptismal", "Pre-youth", "Full-member"];
+
+export const comittees = [
+  "Harvest Comittee",
+  "Anniversary Comittee",
+  "Special Event Comittee",
+  
+]
