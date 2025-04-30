@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router";
 import "./index.css";
+
 import AuthLayout from "../layouts/AuthLayout.tsx";
 import EmailVerified from "../pages/auth/EmailVerified.tsx";
 import ForgotPassword from "../pages/auth/ForgotPassword.tsx";
@@ -77,7 +78,9 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+], {
+  basename: "/"
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
