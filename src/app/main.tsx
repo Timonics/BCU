@@ -25,7 +25,8 @@ import ClassManagement from "../pages/class-management/index.tsx";
 import Comittees from "../pages/comittees/index.tsx";
 import StateProvider from "../contexts/StateProvider.tsx";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
   {
     // Redirect to / if user is authenticated
     path: "auth",

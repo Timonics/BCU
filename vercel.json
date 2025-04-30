@@ -1,11 +1,15 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "handle": "filesystem"
-    },
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "redirects": [
     {
-      "src": "/.*",
-      "dest": "/index.html"
+      "source": "/auth",
+      "destination": "/index.html",
+      "permanent": true
     }
   ]
 }
