@@ -10,7 +10,7 @@ import {
 export const AuthContext = createContext<AuthState | null>(null);
 
 const AuthProvider: React.FC<AppProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const adminSignUp = async (adminData: AdminSignUpData) => {
     console.log(adminData);
