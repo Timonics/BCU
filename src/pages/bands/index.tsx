@@ -82,7 +82,7 @@ const Bands: React.FC = () => {
         )}
       </div>
       {location.search && (
-        <div className="px-4">
+        <div className="px-4 mt-4">
           <div className="border-[1.42px] bg-[#F9FAFB] flex flex-col gap-2 border-black/30 rounded-xl">
             <div className="flex items-center justify-between p-4 py-6 border-b border-black/30">
               <p className="text-lg font-bold flex gap-3 items-center">

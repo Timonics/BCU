@@ -1,13 +1,34 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import { Link } from "react-router";
+import { AdminSignInData } from "../../interfaces/auth";
+import useAuth from "../../hooks/useAuth";
 
 const Login: React.FC = () => {
+  const { adminSignIn } = useAuth();
+  const [loginData, setLoginData] = useState<AdminSignInData>({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setLoginData({
+      ...loginData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    adminSignIn(loginData);
+  };
+
   return (
     <div className="px-4 flex flex-col items-center justify-center">
       <h1 className="text-[32px] font-bold pops text-[#1E1E1E]">
         Welcome Back
       </h1>
-      <div className="flex flex-col w-3/4 gap-7">
+      <form onSubmit={handleSubmit} className="flex flex-col w-3/4 gap-7">
         <div className="flex flex-col gap-1">
           <p className="worksan text-[14px] font-semibold text-[#282828]">
             Email Address
@@ -15,7 +36,8 @@ const Login: React.FC = () => {
           <input
             type="email"
             name="email"
-            value={""}
+            value={loginData.email}
+            onChange={handleChange}
             className="outline-none focus:border-[#009AF4] p-2 w-full rounded-lg border-[1.33px] border-black/30"
           />
         </div>
@@ -26,7 +48,8 @@ const Login: React.FC = () => {
           <input
             type="password"
             name="password"
-            value={""}
+            value={loginData.password}
+            onChange={handleChange}
             className="outline-none focus:border-[#009AF4] p-2 w-full rounded-lg border-[1.33px] border-black/30"
           />
           <Link
@@ -45,12 +68,16 @@ const Login: React.FC = () => {
             Remember Me
           </label>
         </div>
-        <button className="pops font-bold text-slate-100 bg-[#009AF4] w-full p-3 mb-4 rounded-lg cursor-pointer">
+        <button
+          type="submit"
+          className="pops font-bold text-slate-100 bg-[#009AF4] w-full p-3 mb-4 rounded-lg cursor-pointer"
+        >
           Log in
         </button>
-      </div>
+      </form>
     </div>
   );
 };
 
 export default Login;
+3;
