@@ -1,5 +1,4 @@
 import React from "react";
-import { units } from "../../utils/listings";
 import { Link, useLocation } from "react-router";
 import { IoAddCircleOutline } from "react-icons/io5";
 import Button from "../../components/button";
@@ -7,8 +6,11 @@ import useStates from "../../hooks/useStates";
 import CreateNewUnit from "./CreateNewUnit";
 import UnitInfo from "./UnitInfo";
 import AllUnitMembers from "./AllUnitMembers";
+import { useUnitStore } from "../../stores/unitStore";
+import Loading from "../../components/loading";
 
 const Units: React.FC = () => {
+  const { units } = useUnitStore();
   const location = useLocation();
   const { isCreateNewUnitOpen, setIsCreateNewUnitOpen } = useStates();
 
@@ -21,13 +23,13 @@ const Units: React.FC = () => {
   const bandsElements = units.map((unit) => {
     return (
       <Link
-        to={`?${unit.trim()}`}
+        to={`?${unit.name.trim()}`}
         className={`text-[13px] text-[#344054] font-semibold ${
-          unit === unitName &&
+          unit.name === unitName &&
           "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
         }`}
       >
-        {unit}
+        {unit.name}
       </Link>
     );
   });
@@ -57,16 +59,24 @@ const Units: React.FC = () => {
             Units
           </p>
           <div className="flex flex-col p-4 gap-4 pops">
-            <Link
-              to={""}
-              className={`text-[13px] text-[#344054] font-semibold ${
-                !location.search &&
-                "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
-              }`}
-            >
-              All Units
-            </Link>
-            {bandsElements}
+            {units.length ? (
+              <>
+                <Link
+                  to={""}
+                  className={`text-[13px] text-[#344054] font-semibold ${
+                    !location.search &&
+                    "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
+                  }`}
+                >
+                  All Units
+                </Link>
+                {bandsElements}
+              </>
+            ) : (
+              <div className=" h-[150px] relative">
+                <Loading />
+              </div>
+            )}
           </div>
         </div>
         {location.search ? (
@@ -118,7 +128,10 @@ const Units: React.FC = () => {
       )}
       {isCreateNewUnitOpen && (
         <>
-          <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-center border" onClick={() => setIsCreateNewUnitOpen(false)}/>
+          <div
+            className="fixed inset-0 backdrop-blur-xs flex justify-center items-center border"
+            onClick={() => setIsCreateNewUnitOpen(false)}
+          />
           <CreateNewUnit />
         </>
       )}
