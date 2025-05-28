@@ -12,7 +12,7 @@ import BandMembers from "./BandMembers";
 
 const Bands: React.FC = () => {
   const location = useLocation();
-  const { bands, totalBands, selectedBandId, setSelectedBandId } =
+  const { bands, totalBands, selectedBandId, setSelectedBandId, selectedBand } =
     useBandStore();
   const { isCreateNewBandOpen, setIsCreateNewBandOpen } = useStates();
 
@@ -101,7 +101,7 @@ const Bands: React.FC = () => {
           <div className="border-[1.42px] bg-[#F9FAFB] flex flex-col gap-2 border-black/30 rounded-xl">
             <div className="flex items-center justify-between p-4 py-6 border-b border-black/30">
               <p className="text-lg font-bold flex gap-3 items-center">
-                Members Listing (68)
+                Members Listing ({selectedBand?.members.length || 0})
               </p>
               <Button Icon={IoAddCircleOutline} text="Add Members" />
             </div>

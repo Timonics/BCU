@@ -8,9 +8,11 @@ import UnitInfo from "./UnitInfo";
 import AllUnitMembers from "./AllUnitMembers";
 import { useUnitStore } from "../../stores/unitStore";
 import Loading from "../../components/loading";
+import UnitMembers from "./UnitMembers";
 
 const Units: React.FC = () => {
-  const { units, selectedUnitId } = useUnitStore();
+  const { units, selectedUnitId, setSelectedUnitId, selectedUnit } =
+    useUnitStore();
   const location = useLocation();
   const { isCreateNewUnitOpen, setIsCreateNewUnitOpen } = useStates();
 
@@ -24,6 +26,7 @@ const Units: React.FC = () => {
     return (
       <Link
         to={`?${unit.name.trim()}`}
+        onClick={() => setSelectedUnitId(unit._id)}
         className={`text-[13px] text-[#344054] font-semibold ${
           unit.name === unitName &&
           "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
@@ -97,7 +100,7 @@ const Units: React.FC = () => {
           <div className="border-[1.42px] bg-[#F9FAFB] flex flex-col gap-2 border-black/30 rounded-xl">
             <div className="flex items-center justify-between p-4 py-6 border-b border-black/30">
               <p className="text-lg font-bold flex gap-3 items-center">
-                Members List
+                Members Listing ({selectedUnit?.members.length || 0})
               </p>
               <Button Icon={IoAddCircleOutline} text="Transfer Member" />
             </div>
@@ -123,6 +126,7 @@ const Units: React.FC = () => {
                   Action
                 </p>
               </div>
+              <UnitMembers />
             </div>
           </div>
         </div>

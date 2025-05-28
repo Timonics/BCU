@@ -3,6 +3,8 @@ import { TbPencil } from "react-icons/tb";
 import Button from "../../components/button";
 import { useUnit } from "../../hooks/useUnit";
 import { useUnitStore } from "../../stores/unitStore";
+import Loading from "../../components/loading";
+import { useLoadingStore } from "../../stores/loadingStore";
 
 type BandProps = {
   unitId?: string | null;
@@ -19,6 +21,9 @@ const UnitInfo: React.FC<BandProps> = ({
 }) => {
   const { getUnit } = useUnit();
   const { selectedUnit } = useUnitStore();
+  const { isLoading } = useLoadingStore();
+
+  console.log(unitId);
 
   useEffect(() => {
     if (!unitId) return;
@@ -79,7 +84,12 @@ const UnitInfo: React.FC<BandProps> = ({
             <p className="text-black/90 text-[11px] font-bold pops">Birthday</p>
             <p className="text-black/90 text-[11px] font-bold pops">Location</p>
           </div>
-          <div>{unitsLeadershipElements}</div>
+          {selectedUnit !== null && (
+            <div className="relative">
+              {unitsLeadershipElements}
+              {isLoading && <Loading />}
+            </div>
+          )}
         </div>
       </div>
     </div>
