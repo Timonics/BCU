@@ -8,10 +8,12 @@ import useStates from "../../hooks/useStates";
 import CreateNewBand from "./CreateNewBand";
 import { useBandStore } from "../../stores/bandStore";
 import Loading from "../../components/loading";
+import BandMembers from "./BandMembers";
 
 const Bands: React.FC = () => {
   const location = useLocation();
-  const { bands, totalBands, selectedBandId, setSelectedBandId } = useBandStore();
+  const { bands, totalBands, selectedBandId, setSelectedBandId } =
+    useBandStore();
   const { isCreateNewBandOpen, setIsCreateNewBandOpen } = useStates();
 
   let bandName: string;
@@ -34,8 +36,6 @@ const Bands: React.FC = () => {
       </Link>
     );
   });
-
-  
 
   return (
     <section className="flex flex-col relative h-full">
@@ -130,7 +130,7 @@ const Bands: React.FC = () => {
                   Action
                 </p>
               </div>
-              aaa
+              <BandMembers />
             </div>
           </div>
         </div>
