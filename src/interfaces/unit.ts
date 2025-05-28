@@ -1,10 +1,10 @@
 export interface UnitState {
   units: UnitDetails[];
   setUnits: (value: UnitDetails[]) => void;
-  //   selectedBand: null,
-  //   setSelectedBand: (value: SelectedBandDetails) => set({ selectedBand: value }),
-  //   selectedBandId: null,
-  //   setSelectedBandId: (value: string) => set({ selectedBandId: value }),
+  selectedUnit: SelectedUnitDetails | null;
+  setSelectedUnit: (value: SelectedUnitDetails) => void;
+  selectedUnitId: string | null;
+  setSelectedUnitId: (value: string) => void;
   totalUnits: number;
   setTotalUnits: (value: number) => void;
 }
@@ -18,7 +18,7 @@ export interface UnitDetails {
   head: string;
   createdAt: string;
   updatedAt: string;
-  __v: 0;
+  __v: number;
   members: string[];
   leadership: string[];
 }
@@ -35,7 +35,7 @@ export interface AllUnitsResponse {
       head: string;
       createdAt: string;
       updatedAt: string;
-      __v: 0;
+      __v: number;
       members: string[];
       leadership: string[];
     }
@@ -43,4 +43,85 @@ export interface AllUnitsResponse {
   meta: {
     total: number;
   };
+}
+
+export interface UnitsResponse {
+  message: string;
+  data: {
+    _id: string;
+    id: string;
+    name: string;
+    date: string;
+    member: [];
+    head: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    members: [
+      {
+        _id: string;
+        status: string;
+        personalDetails: {
+          gender: string;
+          dob: string;
+        };
+      }
+    ];
+    leadership: [
+      {
+        _id: string;
+        title: string;
+        unit: string;
+        member: {
+          _id: string;
+          personalDetails: {
+            gender: string;
+          };
+        };
+        tenureDate: string;
+        createdAt: string;
+        updatedAt: string;
+        __v: 0;
+      }
+    ];
+  };
+}
+
+export interface SelectedUnitDetails {
+  _id: string;
+  id: string;
+  name: string;
+  date: string;
+  member: [];
+  head: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  members: [
+    {
+      _id: string;
+      status: string;
+      personalDetails: {
+        gender: string;
+        dob: string;
+      };
+    }
+  ];
+  leadership: [
+    {
+      _id: string;
+      title: string;
+      unit: string;
+      member: {
+        _id: string;
+        personalDetails: {
+          gender: string;
+        };
+      };
+      tenureDate: string;
+      createdAt: string;
+      updatedAt: string;
+      __v: 0;
+    }
+  ];
 }

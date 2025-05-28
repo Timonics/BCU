@@ -1,30 +1,47 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TbPencil } from "react-icons/tb";
 import Button from "../../components/button";
-import { leadershipMembers } from "../../utils/dummyDatas/leadershipData";
+import { useUnit } from "../../hooks/useUnit";
+import { useUnitStore } from "../../stores/unitStore";
 
 type BandProps = {
+  unitId?: string | null;
   unitName: string;
   unitYears: number;
   nextAnniversary: string;
 };
 
 const UnitInfo: React.FC<BandProps> = ({
+  unitId,
   unitName,
   unitYears,
   nextAnniversary,
 }) => {
-  // Dummy data for leadership members
-  const unitsLeadershipElements = leadershipMembers.map((member) => (
-    <div className="grid grid-cols-6 p-4 py-4 gap-5 text-[11px] items-center text-sm font-medium text-black/75">
-      <p>{member.title}</p>
-      <p>{member.name}</p>
-      <p>{member.mobile_number}</p>
-      <p>{member.marital_status}</p>
-      <p>{member.birthday}</p>
-      <p>{member.location}</p>
-    </div>
-  ));
+  const { getUnit } = useUnit();
+  const { selectedUnit } = useUnitStore();
+
+  useEffect(() => {
+    if (!unitId) return;
+    getUnit(unitId);
+  }, [unitId]);
+
+  const unitsLeadershipElements =
+    selectedUnit !== null && selectedUnit.leadership.length ? (
+      selectedUnit?.leadership?.map((member) => (
+        <div className="grid grid-cols-6 p-4 py-4 gap-5 text-[11px] items-center text-sm font-medium text-black/75">
+          <p>{member.title}</p>
+          <p>--</p>
+          <p>--</p>
+          <p>--</p>
+          <p>--</p>
+          <p>--</p>
+        </div>
+      ))
+    ) : (
+      <div className="h-[210px] flex justify-center items-center text-2xl font-bold pops">
+        <p>Add Unit Leadership to view</p>
+      </div>
+    );
 
   return (
     <div className="flex flex-col gap-4 w-full">

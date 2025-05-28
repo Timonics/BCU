@@ -3,13 +3,13 @@ import { toast } from "react-toastify";
 import { useAuthStore } from "../stores/authStore";
 import { useLoadingStore } from "../stores/loadingStore";
 import { useUnitStore } from "../stores/unitStore";
-import { AllUnitsResponse } from "../interfaces/unit";
+import { AllUnitsResponse, UnitsResponse } from "../interfaces/unit";
 
 export const useUnit = () => {
   const dbUrl = "https://bcu.candsyf.org/core/unit";
   const { token } = useAuthStore();
   const { setIsLoading } = useLoadingStore();
-  const { setUnits, setTotalUnits } = useUnitStore();
+  const { setUnits, setTotalUnits, setSelectedUnit } = useUnitStore();
 
   const getAllUnits = async () => {
     setIsLoading(true);
@@ -29,5 +29,23 @@ export const useUnit = () => {
       console.error("Error: ", err);
     }
   };
-  return { getAllUnits };
+
+  const getUnit = async (unitId: string) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${dbUrl}/${unitId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const unitResponse = response.data as UnitsResponse;
+      setSelectedUnit(unitResponse.data);
+      setIsLoading(false);
+    } catch (err: any) {
+      setIsLoading(false);
+      toast.error(err.message);
+      console.error("Error: ", err);
+    }
+  };
+  return { getAllUnits, getUnit };
 };

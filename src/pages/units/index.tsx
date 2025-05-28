@@ -10,7 +10,7 @@ import { useUnitStore } from "../../stores/unitStore";
 import Loading from "../../components/loading";
 
 const Units: React.FC = () => {
-  const { units } = useUnitStore();
+  const { units, selectedUnitId } = useUnitStore();
   const location = useLocation();
   const { isCreateNewUnitOpen, setIsCreateNewUnitOpen } = useStates();
 
@@ -81,6 +81,7 @@ const Units: React.FC = () => {
         </div>
         {location.search ? (
           <UnitInfo
+            unitId={selectedUnitId}
             unitName={unitName}
             unitYears={50}
             nextAnniversary="21/08/2025"

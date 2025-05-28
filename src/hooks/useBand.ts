@@ -44,7 +44,6 @@ export const useBand = () => {
   };
 
   const getBand = async (bandId: string) => {
-    console.log(bandId);
     setIsLoading(true);
     try {
       const response = await axios.get(`${dbUrl}/${bandId}`, {

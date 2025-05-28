@@ -1,13 +1,13 @@
 import { create } from "zustand";
-import { UnitDetails, UnitState } from "../interfaces/unit";
+import { SelectedUnitDetails, UnitDetails, UnitState } from "../interfaces/unit";
 
 export const useUnitStore = create<UnitState>((set) => ({
   units: [],
   setUnits: (value: UnitDetails[]) => set({ units: value }),
-//   selectedBand: null,
-//   setSelectedBand: (value: SelectedBandDetails) => set({ selectedBand: value }),
-//   selectedBandId: null,
-//   setSelectedBandId: (value: string) => set({ selectedBandId: value }),
+  selectedUnit: null,
+  setSelectedUnit: (value: SelectedUnitDetails) => set({ selectedUnit: value }),
+  selectedUnitId: null,
+  setSelectedUnitId: (value: string) => set({ selectedUnitId: value }),
   totalUnits: 0,
   setTotalUnits: (value: number) => set({ totalUnits: value }),
 }));
