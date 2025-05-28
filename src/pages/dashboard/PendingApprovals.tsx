@@ -1,28 +1,44 @@
 import React from "react";
 import { TbUser } from "react-icons/tb";
 import { BsExclamationCircle } from "react-icons/bs";
-import { membersData } from "../../utils/dummyDatas/membersData";
+import { useMembershipStore } from "../../stores/membershipStore";
+import { colorCode } from "../../utils/colorCode";
 
 const PendingApprovals: React.FC = () => {
-  const pendingApprovalsMembers = membersData.filter(member => member.status.toLowerCase() === "pending")
+  const { members } = useMembershipStore();
+  const pendingApprovalsMembers = members.filter(
+    (member) => member.status.toLowerCase() === "pending"
+  );
 
-  const pendingApprovalsElements = pendingApprovalsMembers.map((member) => (
-    <div className="grid grid-cols-9 items-center px-2 py-4 text-xs font-medium text-black/75">
-      <p className="">00{member.id}</p>
-      <div className="col-span-2 flex items-center gap-1">
-        <div className="flex items-center justify-center size-8 rounded-full bg-slate-400">
-          <TbUser size={13} />
+  const pendingApprovalsElements = members.map((member) => {
+    const { color, background } = colorCode(member.status);
+    return (
+      <div className="grid grid-cols-9 items-center px-2 py-4 text-xs font-medium text-black/75">
+        <p className="">{member.memberId}</p>
+        <div className="col-span-2 flex items-center gap-1">
+          <div className="flex items-center justify-center size-8 rounded-full bg-slate-400">
+            <TbUser size={13} />
+          </div>
+          {member.personalDetails["name.last"]}{" "}
+          {member.personalDetails["name.first"]}
         </div>
-        {member.name}
+        <p className="">{member.personalDetails.gender}</p>
+        <p className="">{member.churchInformation.band}</p>
+        <p className="">{member.churchInformation.unit}</p>
+        <p className="">--</p>
+        <p
+          className="p-2 text-[10px] w-fit rounded-3xl border"
+          style={{
+            color,
+            backgroundColor: background,
+          }}
+        >
+          {member.status.split("")[0].toUpperCase() + member.status.slice(1)}
+        </p>
+        <p className="">Action</p>
       </div>
-      <p className="">{member.gender}</p>
-      <p className="">{member.band}</p>
-      <p className="">{member.unit}</p>
-      <p className="">{member.class}</p>
-      <p className="">{member.status}</p>
-      <p className="">Action</p>
-    </div>
-  ));
+    );
+  });
 
   return (
     <div className="border-[1.42px] border-black/30 rounded-xl bg-[#cfeff78e]">

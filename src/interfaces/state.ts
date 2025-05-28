@@ -5,5 +5,9 @@ export interface IState {
   setIsCreateNewUnitOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isCreateNewClassOpen: boolean;
   setIsCreateNewClassOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
+export interface LoadingState {
+  isLoading: boolean;
+  setIsLoading: (value: boolean) => void
 }

@@ -1,5 +1,4 @@
 import React from "react";
-import { bands } from "../../utils/listings";
 import { Link, useLocation } from "react-router";
 import BandInfo from "./BandInfo";
 import { IoAddCircleOutline } from "react-icons/io5";
@@ -7,9 +6,12 @@ import Button from "../../components/button";
 import AllBandMembers from "./AllBandMembers";
 import useStates from "../../hooks/useStates";
 import CreateNewBand from "./CreateNewBand";
+import { useBandStore } from "../../stores/bandStore";
+import Loading from "../../components/loading";
 
 const Bands: React.FC = () => {
   const location = useLocation();
+  const { bands, totalBands, selectedBandId, setSelectedBandId } = useBandStore();
   const { isCreateNewBandOpen, setIsCreateNewBandOpen } = useStates();
 
   let bandName: string;
@@ -21,22 +23,26 @@ const Bands: React.FC = () => {
   const bandsElements = bands.map((band) => {
     return (
       <Link
-        to={`?${band.trim()}`}
+        to={`?${band.name.replace(" ", "-")}`}
+        onClick={() => setSelectedBandId(band._id)}
         className={`text-[13px] text-[#344054] font-semibold ${
-          band === bandName &&
+          band.name.replace(" ", "-") === bandName &&
           "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
         }`}
       >
-        {band}
+        {band.name}
       </Link>
     );
   });
+
+  
+
   return (
     <section className="flex flex-col relative h-full">
       <div className="flex w-full gap-2 p-4">
         <div className="w-1/4 bg-[#F9FAFB] border-[1.42px] flex flex-col gap-2 border-black/30 p-4 rounded-xl">
           <p className="text-xs text-black/75">Total Bands</p>
-          <p className="text-black/85 pops font-bold">12</p>
+          <p className="text-black/85 pops font-bold">{totalBands}</p>
         </div>
         <div className="w-1/4 bg-[#F9FAFB] border-[1.42px] flex flex-col gap-2 border-black/30 p-4 rounded-xl">
           <p className="text-xs text-black/75">Leaders</p>
@@ -57,21 +63,30 @@ const Bands: React.FC = () => {
             Bands
           </p>
           <div className="flex flex-col p-4 gap-4 pops">
-            <Link
-              to={""}
-              className={`text-[13px] text-[#344054] font-semibold ${
-                !location.search &&
-                "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
-              }`}
-            >
-              All Bands
-            </Link>
-            {bandsElements}
+            {bands.length ? (
+              <>
+                <Link
+                  to={""}
+                  className={`text-[13px] text-[#344054] font-semibold ${
+                    !location.search &&
+                    "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
+                  }`}
+                >
+                  All Bands
+                </Link>
+                {bandsElements}
+              </>
+            ) : (
+              <div className=" h-[150px] relative">
+                <Loading />
+              </div>
+            )}
           </div>
         </div>
         {location.search ? (
           <BandInfo
-            bandName={bandName}
+            bandId={selectedBandId}
+            bandName={bandName.replace("-", " ")}
             bandYears={50}
             nextAnniversary="21/08/2025"
           />
@@ -115,13 +130,17 @@ const Bands: React.FC = () => {
                   Action
                 </p>
               </div>
+              aaa
             </div>
           </div>
         </div>
       )}
       {isCreateNewBandOpen && (
         <>
-          <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-center border" onClick={() => setIsCreateNewBandOpen(false)}/>
+          <div
+            className="fixed inset-0 backdrop-blur-xs flex justify-center items-center border"
+            onClick={() => setIsCreateNewBandOpen(false)}
+          />
           <CreateNewBand />
         </>
       )}

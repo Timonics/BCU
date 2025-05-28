@@ -6,7 +6,7 @@ export const viewOptions = [
     type: "Approved",
   },
   {
-    type: "Disapproved",
+    type: "Suspended",
   },
   {
     type: "Pending",
