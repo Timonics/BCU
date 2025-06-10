@@ -9,8 +9,10 @@ import AllUnitMembers from "./AllUnitMembers";
 import { useUnitStore } from "../../stores/unitStore";
 import Loading from "../../components/loading";
 import UnitMembers from "./UnitMembers";
+import { useLoadingStore } from "../../stores/loadingStore";
 
 const Units: React.FC = () => {
+  const { isLoading } = useLoadingStore();
   const { units, selectedUnitId, setSelectedUnitId, selectedUnit } =
     useUnitStore();
   const location = useLocation();
@@ -22,20 +24,25 @@ const Units: React.FC = () => {
     unitName = queryPathName.replaceAll("%20", " ");
   else unitName = queryPathName!;
 
-  const bandsElements = units.map((unit) => {
-    return (
-      <Link
-        to={`?${unit.name.trim()}`}
-        onClick={() => setSelectedUnitId(unit._id)}
-        className={`text-[13px] text-[#344054] font-semibold ${
-          unit.name === unitName &&
-          "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
-        }`}
-      >
-        {unit.name}
-      </Link>
+  const bandsElements =
+    units.length !== 0 ? (
+      units.map((unit) => {
+        return (
+          <Link
+            to={`?${unit.name.trim()}`}
+            onClick={() => setSelectedUnitId(unit._id)}
+            className={`text-[13px] text-[#344054] font-semibold ${
+              unit.name === unitName &&
+              "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
+            }`}
+          >
+            {unit.name}
+          </Link>
+        );
+      })
+    ) : (
+      <div className="border"></div>
     );
-  });
   return (
     <section className="flex flex-col relative h-full">
       <div className="flex w-full gap-2 p-4">
@@ -76,8 +83,9 @@ const Units: React.FC = () => {
                 {bandsElements}
               </>
             ) : (
-              <div className=" h-[150px] relative">
-                <Loading />
+              <div className=" h-[150px] relative flex items-center justify-center">
+                {isLoading && <Loading />}
+                <p className="pops font-bold">Add Units</p>
               </div>
             )}
           </div>
