@@ -8,7 +8,9 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       setIsAuthenticated: (value: boolean) => set({ isAuthenticated: value }),
       token: null,
-      setToken: (value: string) => set({token: value})
+      setToken: (value: string) => set({ token: value }),
+      verifyEmail: null,
+      setVerifyEmail: (value: string) => set({ verifyEmail: value }),
     }),
     {
       name: "bcu-auth-storage",

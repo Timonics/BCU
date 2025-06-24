@@ -9,8 +9,10 @@ import CreateNewBand from "./CreateNewBand";
 import { useBandStore } from "../../stores/bandStore";
 import Loading from "../../components/loading";
 import BandMembers from "./BandMembers";
+import { useLoadingStore } from "../../stores/loadingStore";
 
 const Bands: React.FC = () => {
+  const { isLoading } = useLoadingStore();
   const location = useLocation();
   const { bands, totalBands, selectedBandId, setSelectedBandId, selectedBand } =
     useBandStore();
@@ -77,8 +79,9 @@ const Bands: React.FC = () => {
                 {bandsElements}
               </>
             ) : (
-              <div className=" h-[150px] relative">
-                <Loading />
+              <div className=" h-[150px] relative flex items-center justify-center">
+                {isLoading && <Loading />}
+                <p className="pops font-bold">Add Bands</p>
               </div>
             )}
           </div>

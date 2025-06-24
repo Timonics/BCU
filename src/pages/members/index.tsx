@@ -6,14 +6,24 @@ import { TbSearch } from "react-icons/tb";
 import { Outlet } from "react-router";
 
 const Members: React.FC = () => {
-  const [selectedGender, setSelectedGender] = useState<string>("");
-  const [selectedBand, setSelectedBand] = useState<string>("");
-  const [selectedUnit, setSelectedUnit] = useState<string>("");
-  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [selectedGender, setSelectedGender] = useState<string | null>(null);
+  const [selectedBand, setSelectedBand] = useState<string | null>(null);
+  const [selectedUnit, setSelectedUnit] = useState<string | null>(null);
+  const [selectedClass, setSelectedClass] = useState<string | null>(null);
   const [genderIsOpen, setGenderIsOpen] = useState<boolean>(false);
   const [bandIsOpen, setBandIsOpen] = useState<boolean>(false);
   const [unitIsOpen, setUnitIsOpen] = useState<boolean>(false);
   const [classIsOpen, setClassIsOpen] = useState<boolean>(false);
+
+  const [filterIsSelected, setFilterIsSelected] = useState<boolean>(false);
+
+  const [filters, setFilters] = useState({
+    gender: "",
+    band: "",
+    unit: "",
+    churchclass: "",
+  });
+
   return (
     <div className="flex flex-col">
       <div
@@ -56,6 +66,11 @@ const Members: React.FC = () => {
                     }`}
                     onClick={() => {
                       setSelectedGender(gender.name);
+                      setFilterIsSelected(true);
+                      setFilters((prevState) => ({
+                        ...prevState,
+                        gender: gender.name,
+                      }));
                     }}
                   >
                     {gender.name}
@@ -84,6 +99,12 @@ const Members: React.FC = () => {
                     }`}
                     onClick={() => {
                       setSelectedBand(band);
+                      setFilterIsSelected(true);
+
+                      setFilters((prevState) => ({
+                        ...prevState,
+                        band,
+                      }));
                     }}
                   >
                     {band}
@@ -112,6 +133,12 @@ const Members: React.FC = () => {
                     }`}
                     onClick={() => {
                       setSelectedUnit(unit);
+                      setFilterIsSelected(true);
+
+                      setFilters((prevState) => ({
+                        ...prevState,
+                        unit,
+                      }));
                     }}
                   >
                     {unit}
@@ -140,6 +167,12 @@ const Members: React.FC = () => {
                     }`}
                     onClick={() => {
                       setSelectedClass(cl);
+                      setFilterIsSelected(true);
+
+                      setFilters((prevState) => ({
+                        ...prevState,
+                        cl,
+                      }));
                     }}
                   >
                     {cl}
@@ -151,7 +184,13 @@ const Members: React.FC = () => {
         </div>
       </div>
       <div className="px-4 py-2">
-        <MembersListing />
+        <MembersListing
+          gender={filters.gender}
+          band={filters.band}
+          unit={filters.unit}
+          churchclass={filters.churchclass}
+          filterIsSelected={filterIsSelected}
+        />
       </div>
       <Outlet />
     </div>

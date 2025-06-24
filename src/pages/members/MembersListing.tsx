@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LuCloudDownload } from "react-icons/lu";
 import { TbArrowLeft, TbArrowRight, TbPlus, TbUser } from "react-icons/tb";
 import { viewOptions } from "../../utils/viewOptions";
@@ -9,7 +9,19 @@ import Loading from "../../components/loading";
 import { useLoadingStore } from "../../stores/loadingStore";
 import { colorCode } from "../../utils/colorCode";
 
-const MembersListing: React.FC = () => {
+const MembersListing = ({
+  gender,
+  band,
+  unit,
+  churchclass,
+  filterIsSelected,
+}: {
+  gender: string | null;
+  band: string | null;
+  unit: string | null;
+  churchclass: string | null;
+  filterIsSelected: boolean;
+}) => {
   const { isLoading } = useLoadingStore();
   const location = useLocation();
   const { getAllMembers } = useMembership();
@@ -22,16 +34,16 @@ const MembersListing: React.FC = () => {
 
   useEffect(() => {
     getAllMembers();
-  }, [members.length]);
+  }, [members.length, gender, band, unit]);
 
   const viewOptionsElement = viewOptions.map((option, index) => (
     <button
       key={index}
-      className={`border-gray-950/50 py-1.5 px-2 ${
+      className={`border-gray-950/30 py-1.5 px-2 ${
         index === 0 ? "rounded-l-lg border" : "border border-l-0"
       } ${index === 3 && "rounded-r-lg"} cursor-pointer ${
         filterSelected.toLowerCase() === option.type.toLowerCase() &&
-        "bg-black/15"
+        "bg-black/15 font-semibold"
       }`}
       onClick={() => setFilterSelected(option.type)}
     >
@@ -40,81 +52,65 @@ const MembersListing: React.FC = () => {
   ));
 
   const filteredMembers = members.filter(
-    (member) => member.status.toLowerCase() === filterSelected.toLowerCase()
+    (member) =>
+      (gender === "" || member.personalDetails.gender.toLowerCase() === gender?.toLowerCase()) &&
+      (band === "" || member.churchInformation.band.toLowerCase() === band?.toLowerCase()) &&
+      (unit === "" || member.churchInformation.unit.toLowerCase() === unit?.toLowerCase()) &&
+      (churchclass === "" || member.churchInformation.committee.toLowerCase() === churchclass?.toLowerCase())
   );
 
-  const membersElements =
-    members.length != 0 ? (
-      members.map((member) => {
-        const { color, background } = colorCode(member.status);
-        return (
-          <div className="grid grid-cols-9 items-center px-2 py-4 text-xs font-medium text-black/75">
-            <p className="">{member.memberId}</p>
-            <div className="col-span-2 flex items-center gap-1">
-              <div className="flex items-center justify-center size-8 rounded-full bg-slate-400">
-                <TbUser size={13} />
-              </div>
-              <p>
-                {member.personalDetails["name.last"]}{" "}
-                {member.personalDetails["name.first"]}
-              </p>
-            </div>
-            <p className="">{member.personalDetails.gender}</p>
-            <p className="">{member.churchInformation.band}</p>
-            <p className="">{member.churchInformation.unit}</p>
-            <p className="">--</p>
-            <p
-              className="border w-fit text-[10px] p-2 rounded-3xl"
-              style={{
-                color,
-                backgroundColor: background,
-              }}
-            >
-              {member.status.split("")[0].toUpperCase() +
-                member.status.slice(1)}
-            </p>
-            <p className="">Action</p>
-          </div>
-        );
-      })
-    ) : (
-      <div className="h-[210px] relative flex items-center justify-center">
-        {isLoading && <Loading />}
-        <p className="text-2xl pops">Add Members to view</p>
-      </div>
-    );
+  const baseMembers = filterIsSelected ? filteredMembers : members;
 
-  const filteredMembersElements = filteredMembers.map((member) => {
-    const { color, background } = colorCode(member.status);
-    return (
-      <div className="grid grid-cols-9 items-center px-2 py-4 text-xs font-medium text-black/75">
-        <p className="">{member.memberId}</p>
-        <div className="col-span-2 flex items-center gap-1">
-          <div className="flex items-center justify-center size-8 rounded-full bg-slate-400">
-            <TbUser size={13} />
+  const statusFilteredMembers =
+    filterSelected === "View all"
+      ? baseMembers
+      : baseMembers.filter(
+          (member) =>
+            member.status.toLowerCase() === filterSelected.toLowerCase()
+        );
+
+  const membersElements = statusFilteredMembers.length ? (
+    statusFilteredMembers.map((member) => {
+      const { color, background } = colorCode(member.status);
+      return (
+        <div className="grid grid-cols-9 items-center px-2 py-4 text-xs font-medium text-black/75">
+          <p className="">{member.memberId}</p>
+          <div className="col-span-2 flex items-center gap-1">
+            <div className="flex items-center justify-center size-8 rounded-full bg-slate-400">
+              <TbUser size={13} />
+            </div>
+            <p>
+              {member.personalDetails["name.last"]}{" "}
+              {member.personalDetails["name.first"]}
+            </p>
           </div>
-          <p>
-            {member.personalDetails["name.last"]}{" "}
-            {member.personalDetails["name.first"]}
+          <p className="">{member.personalDetails.gender}</p>
+          <p className="">{member.churchInformation.band}</p>
+          <p className="">{member.churchInformation.unit}</p>
+          <p className="">--</p>
+          <p
+            className="border w-fit text-[10px] p-2 rounded-3xl"
+            style={{
+              color,
+              backgroundColor: background,
+            }}
+          >
+            {member.status.split("")[0].toUpperCase() + member.status.slice(1)}
           </p>
+          <p className="">Action</p>
         </div>
-        <p className="">{member.personalDetails.gender}</p>
-        <p className="">{member.churchInformation.band}</p>
-        <p className="">{member.churchInformation.unit}</p>
-        <p className="">--</p>
-        <p
-          className="p-2 text-[10px] w-fit rounded-3xl border"
-          style={{
-            color,
-            backgroundColor: background,
-          }}
-        >
-          {member.status.split("")[0].toUpperCase() + member.status.slice(1)}
-        </p>
-        <p className="">Action</p>
-      </div>
-    );
-  });
+      );
+    })
+  ) : (
+    <div className="h-[210px] relative flex items-center justify-center">
+      {isLoading && <Loading />}
+      <p className="text-3xl font-bold pops">
+        {filterSelected === "View all"
+          ? filterIsSelected && !filteredMembers.length ? "No Data found for the selected filter" : "Add Members to view"
+          : `No ${filterSelected} Members`}
+      </p>
+    </div>
+  );
 
   return (
     <div className="section">
@@ -141,7 +137,7 @@ const MembersListing: React.FC = () => {
       <div className=" flex items-center px-2 py-4 border-b border-black/30">
         <div className="flex text-xs">{viewOptionsElement}</div>
       </div>
-      <div className="grid grid-cols-9 p-2 py-4">
+      <div className="grid grid-cols-9 p-2 py-4 border-b border-black/20 bg-black/5">
         <p className="text-black/90 text-[13px] font-bold pops">Member ID</p>
         <p className="text-black/90 col-span-2 text-[13px] font-bold pops">
           Member Name
@@ -154,17 +150,7 @@ const MembersListing: React.FC = () => {
         <p className="text-black/90 text-[13px] font-bold pops">Action</p>
       </div>
       <div>
-        {filterSelected === "View all" ? (
-          membersElements
-        ) : filteredMembersElements.length !== 0 ? (
-          filteredMembersElements
-        ) : (
-          <div className="h-[210px] flex justify-center items-center">
-            <p className="text-3xl font-bold pops">
-              No {filterSelected} Members{" "}
-            </p>
-          </div>
-        )}
+        {membersElements}
         <div className="p-4 flex justify-around items-center my-7">
           <button className="nav-btn">
             <TbArrowLeft size={20} />

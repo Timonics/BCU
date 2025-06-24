@@ -37,8 +37,18 @@ const AddMember: React.FC = () => {
           </div>
         </div>
         <div className="w-4/6 bg-white flex flex-col overflow-y-auto p-4 gap-4">
-          <Link to={".."} className="px-3 py-1.5 pops text-sm rounded-lg bg-[#009AF4] text-white font-semibold ml-auto">Back</Link>
-          {<Outlet />}
+          <Link
+            to={".."}
+            className="px-3 py-1.5 pops text-sm rounded-lg bg-[#009AF4] text-white font-semibold ml-auto"
+          >
+            Back
+          </Link>
+          <div className="flex flex-col gap-5">
+            <p className="text-2xl pops font-bold">
+              Fill in your information correctly
+            </p>
+            {<Outlet />}
+          </div>
         </div>
       </div>
     </>

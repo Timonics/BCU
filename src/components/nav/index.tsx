@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import dashLogo from "../../assets/dashLogo.png";
 import {
-  TbChevronDown,
   TbLayoutDashboard,
   TbLogout,
   TbSettings,
@@ -11,14 +10,14 @@ import {
 
 import { NavLink } from "react-router";
 import { navItems } from "../../utils/navItems";
+import { useAuth } from "../../hooks/useAuth";
 
 const Nav: React.FC = () => {
+  const { logout } = useAuth();
   const [dropdownOpenedIndex, setDropdownOpenedIndex] = useState<number | null>(
     null
   );
   const navItemsElement = navItems.map((item, index) => {
-    const isOpen = dropdownOpenedIndex === index;
-    
     const Icon = item.icon;
     return (
       <div className="relative">
@@ -26,42 +25,16 @@ const Nav: React.FC = () => {
           key={index}
           to={item.link}
           className={({ isActive }) =>
-            `flex items-center gap-3 p-2.5 pl-4 pops relative hover:bg-black/5 ${
+            `flex items-center gap-3 p-2.5 pl-4 pops relative ${
               isActive
                 ? "bg-[#009AF4]/30 text-[#009AF4] text-sm font-bold"
-                : "text-[12px] font-semibold text-[#252b35]"
+                : "text-[12px] font-semibold text-[#252b35] hover:bg-black/5"
             }`
           }
-          
         >
           <Icon />
           {item.name}
-          <TbChevronDown
-            className="ml-auto cursor-auto w-6 h-5"
-            onClick={(e) => {
-              e.preventDefault();
-              setDropdownOpenedIndex(isOpen ? null : index);
-            }}
-          />
         </NavLink>
-        {isOpen && (
-          <div className="absolute top-full left-4 w-[80%] bg-[#F9FAFB] border border-[#009AF4] rounded-lg z-10">
-            {item.dropdown.map((dropdownItem, index) => {
-              return (
-                <NavLink
-                  key={index}
-                  to={dropdownItem.link}
-                  className={`flex items-center gap-3 p-2.5 pl-4 hover:bg-black/5`}
-                  onClick={() => setDropdownOpenedIndex(null)}
-                >
-                  <p className="text-[12px] font-semibold cursor-pointer">
-                    {dropdownItem.name}
-                  </p>
-                </NavLink>
-              );
-            })}
-          </div>
-        )}
       </div>
     );
   });
@@ -70,7 +43,8 @@ const Nav: React.FC = () => {
     <div
       className="flex flex-col bg-slate-100 h-full gap-5"
       onClick={() => {
-        if (dropdownOpenedIndex || dropdownOpenedIndex === 0) setDropdownOpenedIndex(null);
+        if (dropdownOpenedIndex || dropdownOpenedIndex === 0)
+          setDropdownOpenedIndex(null);
       }}
     >
       <img src={dashLogo} className="size-10 mx-3 mt-3" />
@@ -94,46 +68,36 @@ const Nav: React.FC = () => {
               `flex items-center gap-3 p-2.5 pl-4 pops relative ${
                 isActive
                   ? "bg-[#009AF4]/30 text-[#009AF4] text-sm font-bold"
-                  : "text-[12px] font-semibold text-[#252b35]"
+                  : "text-[12px] font-semibold text-[#252b35] hover:bg-black/5"
               }`
             }
-           
           >
-            {/* {dashIsActive && (
-              <div className="absolute w-[6px] h-full right-0 rounded-l-lg bg-[#009AF4]" />
-            )} */}
             <TbLayoutDashboard />
             Dashboard
           </NavLink>
           <div className="flex flex-col gap-1 w-full">{navItemsElement}</div>
         </div>
-        <div className="flex flex-col w-full">
-          <NavLink
-            to={"logout"}
-            className={({ isActive }) =>
-              `flex items-center gap-3 p-2.5 pl-4 pops ${
-                isActive
-                  ? "bg-[#009AF4]/30 text-[#009AF4] text-sm font-bold"
-                  : "text-[12px] font-semibold "
-              }`
-            }
-          >
-            <TbLogout />
-            Logout
-          </NavLink>
+        <div className="flex flex-col gap-1 w-full mb-4">
           <NavLink
             to={"settings"}
             className={({ isActive }) =>
               `flex items-center gap-3 p-2.5 pl-4 pops ${
                 isActive
                   ? "bg-[#009AF4]/30 text-[#009AF4] text-sm font-bold"
-                  : "text-[12px] font-semibold "
+                  : "text-[12px] font-semibold text-[#252b35] hover:bg-black/5"
               }`
             }
           >
             <TbSettings />
             Settings
           </NavLink>
+          <button
+            onClick={() => logout()}
+            className={`flex items-center gap-3 p-2.5 pl-4 pops text-sm text-[12px] font-semibold text-[#252b35] hover:bg-black/5 cursor-pointer`}
+          >
+            <TbLogout />
+            Logout
+          </button>
         </div>
       </div>
     </div>

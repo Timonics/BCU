@@ -10,10 +10,9 @@ export interface BandState {
 }
 
 export interface AddBandDetails {
-  id: string;
   name: string;
   gender: string;
-  date?: string;
+  foundingDate?: string;
   captain: string;
 }
 
@@ -57,44 +56,7 @@ export interface AllBandsResponse {
 
 export interface BandResponse {
   message: string;
-  data: {
-    _id: string;
-    id: string;
-    name: string;
-    gender: string;
-    date: string;
-    members: [
-      {
-        _id: string;
-        status: string;
-        personalDetails: {
-          gender: string;
-          dob: string;
-        };
-      }
-    ];
-    captain: string;
-    leadership: [
-      {
-        _id: string;
-        title: string;
-        band: string;
-        member: {
-          _id: string;
-          personalDetails: {
-            gender: string;
-          };
-        };
-        tenureDate: string;
-        createdAt: string;
-        updatedAt: string;
-        __v: number;
-      }
-    ];
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-  };
+  data: SelectedBandDetails
 }
 
 export interface SelectedBandDetails {

@@ -1,47 +1,72 @@
-export const membersData = [
-    {
-        id: 1,
-        name: "Oderinde Michael",
-        gender: "Male",
-        band: "Jeremiah",
-        unit: "IT",
-        class: "ETS",
-        status: "Pending",
+export const members = [
+  {
+    memberId: 1,
+    personalDetails: {
+      "name.first": "Michael",
+      "name.last": "Oderinde",
+      gender: "Male",
     },
-    {
-        id: 2,
-        name: "Oderinde Ite",
-        gender: "Female",
-        band: "Rhoda",
-        unit: "Secretariat",
-        class: "Baptismal",
-        status: "Approved",
+    churchInformation: {
+      band: "Jeremiah",
+      unit: "IT",
+      class: "ETS",
     },
-    {
-        id: 3,
-        name: "Oderinde Sam",
-        gender: "Male",
-        band: "Joseph",
-        unit: "Choir",
-        class: "ETS",
-        status: "Approved",
+    status: "Pending",
+  },
+  {
+    memberId: 2,
+    personalDetails: {
+      "name.first": "Ite",
+      "name.last": "Oderinde",
+      gender: "Female",
     },
-    {
-        id: 2,
-        name: "Adegoke Iseoluwa",
-        gender: "Male",
-        band: "Jeremiah",
-        unit: "Programs",
-        class: "Baptismal",
-        status: "Disapproved",
+    churchInformation: {
+      band: "Rhoda",
+      unit: "Secretariat",
+      class: "Baptismal",
     },
-    {
-        id: 2,
-        name: "Adeife Boluwatife",
-        gender: "Female",
-        band: "Rhoda",
-        unit: "Secretariat",
-        class: "Baptismal",
-        status: "Pending",
+    status: "Approved",
+  },
+  {
+    memberId: 3,
+    personalDetails: {
+      "name.first": "Sam",
+      "name.last": "Oderinde",
+      gender: "Male",
     },
-]
+    churchInformation: {
+      band: "Joseph",
+      unit: "Choir",
+      class: "ETS",
+    },
+    status: "Approved",
+  },
+  {
+    memberId: 2,
+    personalDetails: {
+      "name.first": "Iseoluwa",
+      "name.last": "Adegoke",
+      gender: "Male",
+    },
+    churchInformation: {
+      band: "Jeremiah",
+      unit: "Programs",
+      class: "Baptismal",
+    },
+    status: "Suspended",
+  },
+  {
+    memberId: 2,
+    personalDetails: {
+      "name.first": "Boluwatife",
+      "name.last": "Adeife",
+      gender: "Female",
+    },
+    churchInformation: {
+      band: "Rhoda",
+      unit: "Secretariat",
+      class: "Baptismal",
+    },
+    status: "Pending",
+  },
+];

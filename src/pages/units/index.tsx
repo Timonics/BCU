@@ -24,7 +24,7 @@ const Units: React.FC = () => {
     unitName = queryPathName.replaceAll("%20", " ");
   else unitName = queryPathName!;
 
-  const bandsElements =
+  const unitsElements =
     units.length !== 0 ? (
       units.map((unit) => {
         return (
@@ -80,7 +80,7 @@ const Units: React.FC = () => {
                 >
                   All Units
                 </Link>
-                {bandsElements}
+                {unitsElements}
               </>
             ) : (
               <div className=" h-[150px] relative flex items-center justify-center">

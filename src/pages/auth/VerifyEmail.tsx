@@ -1,6 +1,9 @@
 import React from "react";
+import { useAuthStore } from "../../stores/authStore";
 
 const VerifyEmail: React.FC = () => {
+  const { verifyEmail } = useAuthStore();
+  
   return (
     <div className="flex flex-col items-center justify-center gap-15">
       <div className="text-center">
@@ -8,7 +11,7 @@ const VerifyEmail: React.FC = () => {
           Verify Your Email
         </h1>
         <p className="worksan text-[16px] opacity-55">
-          Enter code we sent to famayegrace@gmail.com
+          Enter code we sent to <span className="font-bold">{verifyEmail}</span>
         </p>
       </div>
       <div className="flex gap-5 w-full items-center justify-center">
