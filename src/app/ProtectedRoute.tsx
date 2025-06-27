@@ -5,10 +5,10 @@ import { useAuthStore } from "../stores/authStore";
 
 export const ProtectedRoute: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
-  return !isAuthenticated ? <Outlet /> : <Navigate to={"/auth"} />;
+  return isAuthenticated ? <Outlet /> : <Navigate to={"/auth"} />;
 };
 
 export const RedirectRoute: React.FC = () => {
   const { isAuthenticated } = useAuthStore();
-  return !isAuthenticated ? <Navigate to={"/"} /> : <Outlet />;
+  return isAuthenticated ? <Navigate to={"/"} /> : <Outlet />;
 };
