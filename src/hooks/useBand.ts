@@ -1,5 +1,6 @@
 import axios from "axios";
 import {
+  AddBandDetails,
   AllBandsResponse,
   BandResponse,
 } from "../interfaces/bands";
@@ -14,15 +15,20 @@ export const useBand = () => {
   const { setBands, setTotalBand, setSelectedBand } = useBandStore();
   const { setIsLoading } = useLoadingStore();
 
-  // const addBand = async (bandDetails: AddBandDetails) => {
-  //   try {
-  //     const response = await axios.post(`${dbUrl}`, bandDetails);
-
-  //     const bandResponse = response.data;
-  //   } catch (err) {
-  //     console.error("Error: ", err);
-  //   }
-  // };
+  const addBand = async (bandDetails: AddBandDetails) => {
+    try {
+      await axios.post(`${dbUrl}`, bandDetails, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Band added successfully");
+      window.location.reload();
+    } catch (err) {
+      console.error("Error: ", err);
+      toast.error("Error adding band");
+    }
+  };
 
   const getAllBands = async () => {
     setIsLoading(true);
@@ -61,5 +67,5 @@ export const useBand = () => {
     }
   };
 
-  return { getAllBands, getBand };
+  return { getAllBands, getBand, addBand };
 };

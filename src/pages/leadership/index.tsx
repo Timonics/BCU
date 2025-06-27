@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { LuPenLine } from "react-icons/lu";
 import { leadershipData } from "../../utils/dummyDatas/leadershipData";
 import AddLeadership from "./addLeadership";
+import { TbEdit, TbEye, TbTrash } from "react-icons/tb";
 
 const LeaderShip: React.FC = () => {
   const [showCreateLeadership, setShowCreateLeadership] =
@@ -13,7 +14,18 @@ const LeaderShip: React.FC = () => {
         {data.counts} - {data.title}
       </p>
       <p>{data.date_created}</p>
-      <p>Action</p>
+      <p className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
+        <button className="hover:bg-gray-200 p-1.5 rounded-full cursor-pointer transition ease-in-out duration-300 hover:text-blue-500 text-gray-600">
+          <TbEdit size={20} />
+        </button>
+        <hr />
+        <div className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-purple-800 text-gray-600">
+          <TbEye size={20} />
+        </div>
+        <button className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-red-500 text-gray-600">
+          <TbTrash size={20} />
+        </button>
+      </p>
     </div>
   ));
 

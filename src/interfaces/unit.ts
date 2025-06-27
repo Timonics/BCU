@@ -45,6 +45,10 @@ export interface AllUnitsResponse {
   };
 }
 
+export interface AddUnit {
+  
+}
+
 export interface UnitsResponse {
   message: string;
   data: {

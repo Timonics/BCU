@@ -113,7 +113,7 @@ const Units: React.FC = () => {
               <Button Icon={IoAddCircleOutline} text="Transfer Member" />
             </div>
             <div className="p-4">
-              <div className="grid grid-cols-7 p-2 py-4">
+              <div className="grid grid-cols-9 p-2 py-4">
                 <p className="text-black/90 text-[11px] font-bold pops">
                   Members ID
                 </p>
@@ -129,6 +129,12 @@ const Units: React.FC = () => {
                 </p>
                 <p className="text-black/90 text-[11px] font-bold pops">
                   Location
+                </p>
+                <p className="text-black/90 text-[11px] font-bold pops">
+                  --
+                </p>
+                <p className="text-black/90 text-[11px] font-bold pops">
+                  --
                 </p>
                 <p className="text-black/90 text-[11px] font-bold pops">
                   Action

@@ -78,14 +78,14 @@ const MembersListing = ({
   const baseMembers = filterIsSelected
     ? searchTerm
       ? filteredMembers.filter((member) =>
-          `${member.personalDetails["name.last"]} ${member.personalDetails["name.last"]}`
+          `${member.personalDetails["name.last"]}${" "}${member.personalDetails["name.last"]}`
             .toLowerCase()
             .includes(searchTerm.toLowerCase())
         )
       : filteredMembers
     : searchTerm
     ? members.filter((member) =>
-        `${member.personalDetails["name.last"]} ${member.personalDetails["name.last"]}`
+        `${member.personalDetails["name.last"]}${" "}${member.personalDetails["name.last"]}`
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
       )

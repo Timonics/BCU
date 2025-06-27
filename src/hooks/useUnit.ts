@@ -47,5 +47,16 @@ export const useUnit = () => {
       console.error("Error: ", err);
     }
   };
-  return { getAllUnits, getUnit };
+
+  const addUnit = async () => {
+    try {
+      await axios.get(`${dbUrl}`)
+    } catch(err: any) {
+      setIsLoading(false);
+      toast.error(err.message);
+      console.error("Error: ", err);
+    }
+  }
+
+  return { getAllUnits, getUnit, addUnit };
 };
