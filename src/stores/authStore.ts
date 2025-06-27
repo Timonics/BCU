@@ -2,11 +2,23 @@ import { create } from "zustand";
 import { AuthState } from "../interfaces/auth";
 import { persist } from "zustand/middleware";
 
-export const useAuthStore = create<AuthState>()(
+interface ExtendedAuthState extends AuthState {
+  authTimeStamp?: number;
+  setIsAuthenticated: (value: boolean) => void;
+}
+
+const AUTH_EXPIRATION_TIME = 3600000;
+
+export const useAuthStore = create<ExtendedAuthState>()(
   persist(
     (set) => ({
       isAuthenticated: false,
-      setIsAuthenticated: (value: boolean) => set({ isAuthenticated: value }),
+      authTimeStamp: undefined,
+      setIsAuthenticated: (value: boolean) =>
+        set({
+          isAuthenticated: value,
+          authTimeStamp: value ? Date.now() : undefined,
+        }),
       token: null,
       setToken: (value: string) => set({ token: value }),
       verifyEmail: null,
@@ -14,6 +26,19 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "bcu-auth-storage",
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          const currentTime = Date.now();
+          if (
+            state.isAuthenticated &&
+            state.authTimeStamp &&
+            currentTime - state.authTimeStamp > AUTH_EXPIRATION_TIME
+          ) {
+            state.isAuthenticated = false;
+            state.authTimeStamp = undefined;
+          }
+        }
+      },
     }
   )
 );

@@ -2,8 +2,8 @@ import React from "react";
 import { useAuthStore } from "../../stores/authStore";
 
 const VerifyEmail: React.FC = () => {
-  const { verifyEmail } = useAuthStore();
-  
+  const { verifyEmail, setIsAuthenticated } = useAuthStore();
+
   return (
     <div className="flex flex-col items-center justify-center gap-15">
       <div className="text-center">
@@ -44,7 +44,10 @@ const VerifyEmail: React.FC = () => {
         <button className="pops font-bold text-slate-100 bg-[#009AF4] w-full p-3 mt-3 rounded-lg cursor-pointer">
           Verify Code
         </button>
-        <button className="worksan text-[16px] opacity-55 text-center cursor-pointer">
+        <button
+          onClick={() => setIsAuthenticated(true)}
+          className="worksan text-[16px] opacity-55 text-center cursor-pointer"
+        >
           Resend Code
         </button>
       </div>

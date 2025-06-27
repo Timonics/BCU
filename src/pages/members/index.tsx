@@ -14,8 +14,8 @@ const Members: React.FC = () => {
   const [bandIsOpen, setBandIsOpen] = useState<boolean>(false);
   const [unitIsOpen, setUnitIsOpen] = useState<boolean>(false);
   const [classIsOpen, setClassIsOpen] = useState<boolean>(false);
-
   const [filterIsSelected, setFilterIsSelected] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [filters, setFilters] = useState({
     gender: "",
@@ -44,6 +44,9 @@ const Members: React.FC = () => {
             <input
               placeholder="Search"
               className="w-[150px] xl:w-[170px] h-[40px] outline-none placeholder:text-sm placeholder:font-medium"
+              name="searchTerm"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
             />
           </div>
         </div>
@@ -190,6 +193,7 @@ const Members: React.FC = () => {
           unit={filters.unit}
           churchclass={filters.churchclass}
           filterIsSelected={filterIsSelected}
+          searchTerm={searchTerm}
         />
       </div>
       <Outlet />

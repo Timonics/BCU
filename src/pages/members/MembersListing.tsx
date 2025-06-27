@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { LuCloudDownload } from "react-icons/lu";
-import { TbArrowLeft, TbArrowRight, TbPlus, TbUser } from "react-icons/tb";
+import {
+  TbArrowLeft,
+  TbArrowRight,
+  TbEdit,
+  TbEye,
+  TbPlus,
+  TbTrash,
+  TbUser,
+} from "react-icons/tb";
 import { viewOptions } from "../../utils/viewOptions";
 import { Link, useLocation } from "react-router";
 import { useMembership } from "../../hooks/useMembership";
@@ -15,12 +23,14 @@ const MembersListing = ({
   unit,
   churchclass,
   filterIsSelected,
+  searchTerm,
 }: {
   gender: string | null;
   band: string | null;
   unit: string | null;
   churchclass: string | null;
   filterIsSelected: boolean;
+  searchTerm: string;
 }) => {
   const { isLoading } = useLoadingStore();
   const location = useLocation();
@@ -53,13 +63,33 @@ const MembersListing = ({
 
   const filteredMembers = members.filter(
     (member) =>
-      (gender === "" || member.personalDetails.gender.toLowerCase() === gender?.toLowerCase()) &&
-      (band === "" || member.churchInformation.band.toLowerCase() === band?.toLowerCase()) &&
-      (unit === "" || member.churchInformation.unit.toLowerCase() === unit?.toLowerCase()) &&
-      (churchclass === "" || member.churchInformation.committee.toLowerCase() === churchclass?.toLowerCase())
+      (gender === "" ||
+        member.personalDetails.gender.toLowerCase() ===
+          gender?.toLowerCase()) &&
+      (band === "" ||
+        member.churchInformation.band.toLowerCase() === band?.toLowerCase()) &&
+      (unit === "" ||
+        member.churchInformation.unit.toLowerCase() === unit?.toLowerCase()) &&
+      (churchclass === "" ||
+        member.churchInformation.committee.toLowerCase() ===
+          churchclass?.toLowerCase())
   );
 
-  const baseMembers = filterIsSelected ? filteredMembers : members;
+  const baseMembers = filterIsSelected
+    ? searchTerm
+      ? filteredMembers.filter((member) =>
+          `${member.personalDetails["name.last"]} ${member.personalDetails["name.last"]}`
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        )
+      : filteredMembers
+    : searchTerm
+    ? members.filter((member) =>
+        `${member.personalDetails["name.last"]} ${member.personalDetails["name.last"]}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      )
+    : members;
 
   const statusFilteredMembers =
     filterSelected === "View all"
@@ -97,7 +127,18 @@ const MembersListing = ({
           >
             {member.status.split("")[0].toUpperCase() + member.status.slice(1)}
           </p>
-          <p className="">Action</p>
+          <p className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
+            <button className="hover:bg-gray-200 p-1.5 rounded-full cursor-pointer transition ease-in-out duration-300 hover:text-blue-500 text-gray-600">
+              <TbEdit size={20} />
+            </button>
+            <hr />
+            <div className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-purple-800 text-gray-600">
+              <TbEye size={20} />
+            </div>
+            <button className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-red-500 text-gray-600">
+              <TbTrash size={20} />
+            </button>
+          </p>
         </div>
       );
     })
@@ -106,7 +147,9 @@ const MembersListing = ({
       {isLoading && <Loading />}
       <p className="text-3xl font-bold pops">
         {filterSelected === "View all"
-          ? filterIsSelected && !filteredMembers.length ? "No Data found for the selected filter" : "Add Members to view"
+          ? filterIsSelected && !filteredMembers.length
+            ? "No Data found for the selected filter"
+            : "Add Members to view"
           : `No ${filterSelected} Members`}
       </p>
     </div>
