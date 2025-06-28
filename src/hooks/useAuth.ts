@@ -43,9 +43,18 @@ export const useAuth = () => {
       if (data.admin.email.verified) {
         setIsAuthenticated(true);
       } else {
-        setVerifyEmail(data.admin.email.value)
+        setVerifyEmail(data.admin.email.value);
         navigate("../auth/verify-email");
       }
+    } catch (err: any) {
+      toast.error(err.message);
+      setIsLoading(false);
+      console.error("Error: ", err);
+    }
+  };
+
+  const verifyEmail = async () => {
+    try {
     } catch (err: any) {
       toast.error(err.message);
       setIsLoading(false);
@@ -62,5 +71,6 @@ export const useAuth = () => {
     adminSignin,
     adminSignup,
     logout,
+    verifyEmail
   };
 };

@@ -171,10 +171,10 @@ const ChurchInfo: React.FC = () => {
           onClick={() => setUnitIsOpen(!unitIsOpen)}
         >
           <p className="text-xs font-medium text-[#101828]/65">
-            {selectedUnit ? selectedUnit : "--Select Unit(s)--"}
+            {selectedOrdinationRank ? selectedOrdinationRank : "--Select Ordination Rank(s)--"}
           </p>
           <MdKeyboardArrowDown className="absolute right-2" />
-          {unitIsOpen && (
+          {ordinationRankIsOpen && (
             <ul className="absolute top-[50px] left-0 w-full bg-white border-[1.5px] border-[#D0D5DD] rounded-lg shadow-xl">
               {units.map((unit, index) => (
                 <li
@@ -182,7 +182,7 @@ const ChurchInfo: React.FC = () => {
                     index !== units.length - 1 && "border-b border-[#97979786]"
                   }`}
                   onClick={() => {
-                    setSelectedUnit(unit);
+                    setSelectedOrdinationRank(unit);
                   }}
                 >
                   {unit}

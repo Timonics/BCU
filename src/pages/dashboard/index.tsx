@@ -8,8 +8,14 @@ const Dashboard: React.FC = () => {
   return (
     <div className="flex flex-col gap-6 p-4">
       <Analytics />
-      {/* <PendingApprovals /> */}
-      <MembersListing />
+      <MembersListing
+        gender={""}
+        band={""}
+        unit={""}
+        churchclass={""}
+        filterIsSelected={false}
+        searchTerm=""
+      />
     </div>
   );
 };
