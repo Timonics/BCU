@@ -1,8 +1,37 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../../stores/authStore";
 
 const VerifyEmail: React.FC = () => {
+  const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const { verifyEmail, setIsAuthenticated } = useAuthStore();
+  const inputRefs = useRef<HTMLInputElement[]>([]);
+
+  useEffect(() => {
+    if (inputRefs.current[0]) inputRefs.current[0].focus();
+  }, []);
+
+  const handleChange = (index: number, value: string) => {
+    if (isNaN(Number(value))) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value.substring(value.length - 1); // Only take the last character
+    setOtp(newOtp);
+
+    // Move to next input if current input is filled
+    if (value && index < 5) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    // Move to previous input on backspace if current input is empty
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center gap-15">
@@ -15,30 +44,22 @@ const VerifyEmail: React.FC = () => {
         </p>
       </div>
       <div className="flex gap-5 w-full items-center justify-center">
-        <input
-          type="text"
-          className="size-22 text-center rounded-xl border-[1.33px] focus:border-[#009AF4] border-black/30 outline-none text-xl"
-        />
-        <input
-          type="text"
-          className="size-22 text-center rounded-xl border-[1.33px] focus:border-[#009AF4] border-black/30 outline-none text-xl"
-        />
-        <input
-          type="text"
-          className="size-22 text-center rounded-xl border-[1.33px] focus:border-[#009AF4] border-black/30 outline-none text-xl"
-        />
-        <input
-          type="text"
-          className="size-22 text-center rounded-xl border-[1.33px] focus:border-[#009AF4] border-black/30 outline-none text-xl"
-        />
-        <input
-          type="text"
-          className="size-22 text-center rounded-xl border-[1.33px] focus:border-[#009AF4] border-black/30 outline-none text-xl"
-        />
-        <input
-          type="text"
-          className="size-22 text-center rounded-xl border-[1.33px] focus:border-[#009AF4] border-black/30 outline-none text-xl"
-        />
+        {otp.map((value, index) => (
+          <input
+            type="text"
+            className="size-22 text-center rounded-xl border-[1.33px] focus:border-[#009AF4] border-black/30 outline-none text-xl"
+            key={index}
+            value={value}
+            onChange={(e) => handleChange(index, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(index, e)}
+            ref={(el) => {
+              if (el) {
+                inputRefs.current[index] = el;
+              }
+            }}
+            maxLength={1}
+          />
+        ))}
       </div>
       <div className="flex flex-col w-2/4 gap-4 mb-4">
         <button className="pops font-bold text-slate-100 bg-[#009AF4] w-full p-3 mt-3 rounded-lg cursor-pointer">

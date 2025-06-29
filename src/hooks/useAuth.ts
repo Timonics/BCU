@@ -53,8 +53,10 @@ export const useAuth = () => {
     }
   };
 
-  const verifyEmail = async () => {
+  const verifyEmail = async (verifyData: {email: string, otp: string}) => {
     try {
+      await axios.post(`${dbUrl}verify-email`, verifyData);
+      toast.success("Email verified successfully");
     } catch (err: any) {
       toast.error(err.message);
       setIsLoading(false);

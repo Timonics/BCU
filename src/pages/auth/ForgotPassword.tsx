@@ -1,10 +1,13 @@
 import React from "react";
+import { TbKey } from "react-icons/tb";
 import { Link } from "react-router";
 
 const ForgotPassword: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-3 px-4">
-      <div className="size-20 shadow-2xl rounded-xl bg-slate-50"></div>
+      <div className="size-20 shadow-2xl rounded-xl bg-slate-50 flex items-center justify-center">
+        <TbKey className="text-[#344054]" size={50} />
+      </div>
       <div className="flex flex-col gap-1 justify-center items-center mt-3">
         <h1 className="text-[26px] font-bold pops text-[#1E1E1E]">
           Forgotten Password?
@@ -27,7 +30,12 @@ const ForgotPassword: React.FC = () => {
           Done
         </button>
       </div>
-      <Link to={"../"} className="text-sm font-semibold worksan opacity-70 mb-4 cursor-pointer">Back to Login</Link>
+      <Link
+        to={"../"}
+        className="text-sm font-semibold worksan opacity-70 mb-4 cursor-pointer"
+      >
+        Back to Login
+      </Link>
     </div>
   );
 };
