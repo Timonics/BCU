@@ -7,7 +7,7 @@ import Loading from "../../components/loading";
 import { useLoadingStore } from "../../stores/loadingStore";
 
 type BandProps = {
-  unitId?: string | null;
+  unitId?: number | null;
   unitName: string;
   unitYears: number;
   nextAnniversary: string;
@@ -31,10 +31,10 @@ const UnitInfo: React.FC<BandProps> = ({
   }, [unitId]);
 
   const unitsLeadershipElements =
-    selectedUnit !== null && selectedUnit.leadership.length ? (
-      selectedUnit?.leadership?.map((member) => (
+    selectedUnit !== null && selectedUnit.members?.length ? (
+      selectedUnit?.members?.map((member) => (
         <div className="grid grid-cols-6 p-4 py-4 gap-5 text-[11px] items-center text-sm font-medium text-black/75">
-          <p>{member.title}</p>
+          <p>{member.firstName}</p>
           <p>--</p>
           <p>--</p>
           <p>--</p>

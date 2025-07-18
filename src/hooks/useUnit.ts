@@ -29,7 +29,7 @@ export const useUnit = () => {
     }
   };
 
-  const getUnit = async (unitId: string) => {
+  const getUnit = async (unitId: number) => {
     setIsLoading(true);
     try {
       const response = await axios.get(`${dbUrl}/${unitId}`, {

@@ -20,8 +20,8 @@ const AllUnitMembers: React.FC = () => {
         <div className="grid grid-cols-6 p-4 py-4 gap-5 items-center text-[11px] font-bold text-black/70">
           <p>{unit.id}</p>
           <p>{unit.name}</p>
-          <p>{unit.date.slice(0, 10)}</p>
-          <p>{unit.head}</p>
+          <p>{unit.foundingDate}</p>
+          <p>{unit.unitHead.firstName}</p>
           <p>{unit.members ? unit.members.length : 0}</p>
           <p className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
             <button className="hover:bg-gray-200 p-1.5 rounded-full cursor-pointer transition ease-in-out duration-300 hover:text-blue-500 text-gray-600">

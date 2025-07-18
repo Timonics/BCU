@@ -3,8 +3,6 @@ import { TbPencil } from "react-icons/tb";
 import Button from "../../components/button";
 import { useBand } from "../../hooks/useBand";
 import { useBandStore } from "../../stores/bandStore";
-import Loading from "../../components/loading";
-import { useLoadingStore } from "../../stores/loadingStore";
 
 type BandProps = {
   bandId: string | null;
@@ -21,7 +19,6 @@ const BandInfo: React.FC<BandProps> = ({
 }) => {
   const { getBand } = useBand();
   const { selectedBand } = useBandStore();
-  const { isLoading } = useLoadingStore();
 
   useEffect(() => {
     if (!bandId) return;

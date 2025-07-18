@@ -8,18 +8,18 @@ export default function UnitMembers() {
   const { isLoading } = useLoadingStore();
 
   const memberElements = selectedUnit ? (
-    selectedUnit.members.map((member) => (
+    selectedUnit.members?.map((member) => (
       <div className="grid grid-cols-9 p-2 py-4">
-        <p className="text-black/90 text-[10px] font-bold pops">{member._id}</p>
+        <p className="text-black/90 text-[10px] font-bold pops">{member.id}</p>
         <p className="text-black/90 col-span-2 text-[10px] font-bold pops">
           --
         </p>
         <p className="text-black/90 text-[10px] font-bold pops">
-          {member.personalDetails.gender}
+          {member.gender}
         </p>
         <p className="text-black/90 text-[10px] font-bold pops">--</p>
         <p className="text-black/90 text-[10px] font-bold pops">
-          {member.personalDetails.dob}
+          {member.dateOfBirth}
         </p>
         <p className="text-black/90 text-[10px] font-bold pops">
           {member.status}

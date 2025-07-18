@@ -5,8 +5,8 @@ export interface UnitState {
   setUnits: (value: UnitDetails[]) => void;
   selectedUnit: UnitDetails | null;
   setSelectedUnit: (value: UnitDetails) => void;
-  selectedUnitId: string | null;
-  setSelectedUnitId: (value: string) => void;
+  selectedUnitId: number | null;
+  setSelectedUnitId: (value: number) => void;
   totalUnits: number;
   setTotalUnits: (value: number) => void;
 }
@@ -22,6 +22,7 @@ export interface UnitDetails {
   name: string;
   foundingDate: string;
   unitHead: Partial<MemberDetails>;
+  members?: MemberDetails[];
 }
 
 export interface UnitsResponse {
