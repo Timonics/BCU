@@ -1,15 +1,15 @@
-import React from "react";
-import { Link, useLocation } from "react-router";
-import BandInfo from "./BandInfo";
-import { IoAddCircleOutline } from "react-icons/io5";
-import Button from "../../components/button";
-import AllBandMembers from "./AllBandMembers";
-import useStates from "../../hooks/useStates";
-import CreateNewBand from "./CreateNewBand";
-import { useBandStore } from "../../stores/bandStore";
-import Loading from "../../components/loading";
-import BandMembers from "./BandMembers";
-import { useLoadingStore } from "../../stores/loadingStore";
+import React from 'react';
+import { Link, useLocation } from 'react-router';
+import BandInfo from './BandInfo';
+import { IoAddCircleOutline } from 'react-icons/io5';
+import Button from '../../components/button';
+import AllBandMembers from './AllBandMembers';
+import useStates from '../../hooks/useStates';
+import CreateNewBand from './CreateNewBand';
+import { useBandStore } from '../../stores/bandStore';
+import Loading from '../../components/loading';
+import BandMembers from './BandMembers';
+import { useLoadingStore } from '../../stores/loadingStore';
 
 const Bands: React.FC = () => {
   const { isLoading } = useLoadingStore();
@@ -19,19 +19,19 @@ const Bands: React.FC = () => {
   const { isCreateNewBandOpen, setIsCreateNewBandOpen } = useStates();
 
   let bandName: string;
-  const queryPathName = location.search.split("?").at(-1);
-  if (queryPathName?.includes("%20"))
-    bandName = queryPathName.replaceAll("%20", " ");
+  const queryPathName = location.search.split('?').at(-1);
+  if (queryPathName?.includes('%20'))
+    bandName = queryPathName.replaceAll('%20', ' ');
   else bandName = queryPathName!;
 
   const bandsElements = bands.map((band) => {
     return (
       <Link
-        to={`?${band.name.replace(" ", "-")}`}
-        onClick={() => setSelectedBandId(band._id)}
+        to={`?${band.name.replace(' ', '-')}`}
+        onClick={() => setSelectedBandId(band.id.toString())}
         className={`text-[13px] text-[#344054] font-semibold ${
-          band.name.replace(" ", "-") === bandName &&
-          "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
+          band.name.replace(' ', '-') === bandName &&
+          'bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105'
         }`}
       >
         {band.name}
@@ -68,10 +68,10 @@ const Bands: React.FC = () => {
             {bands.length ? (
               <>
                 <Link
-                  to={""}
+                  to={''}
                   className={`text-[13px] text-[#344054] font-semibold ${
                     !location.search &&
-                    "bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105"
+                    'bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105'
                   }`}
                 >
                   All Bands
@@ -89,7 +89,7 @@ const Bands: React.FC = () => {
         {location.search ? (
           <BandInfo
             bandId={selectedBandId}
-            bandName={bandName.replace("-", " ")}
+            bandName={bandName.replace('-', ' ')}
             bandYears={50}
             nextAnniversary="21/08/2025"
           />
@@ -104,7 +104,7 @@ const Bands: React.FC = () => {
           <div className="border-[1.42px] bg-[#F9FAFB] flex flex-col gap-2 border-black/30 rounded-xl">
             <div className="flex items-center justify-between p-4 py-6 border-b border-black/30">
               <p className="text-lg font-bold flex gap-3 items-center">
-                Members Listing ({selectedBand?.members.length || 0})
+                Members Listing ({selectedBand?.members?.length || 0})
               </p>
               <Button Icon={IoAddCircleOutline} text="Add Members" />
             </div>

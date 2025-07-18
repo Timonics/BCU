@@ -1,31 +1,35 @@
-import { TbEdit, TbEye, TbTrash } from "react-icons/tb";
-import Loading from "../../components/loading";
-import { useBandStore } from "../../stores/bandStore";
-import { useLoadingStore } from "../../stores/loadingStore";
+import { TbEdit, TbEye, TbTrash } from 'react-icons/tb';
+import Loading from '../../components/loading';
+import { useBandStore } from '../../stores/bandStore';
+import { useLoadingStore } from '../../stores/loadingStore';
 
 export default function BandMembers() {
   const { selectedBand } = useBandStore();
   const { isLoading } = useLoadingStore();
 
   const memberElements = selectedBand ? (
-    selectedBand.members.map((member) => (
+    selectedBand.members?.map((member) => (
       <div className="grid grid-cols-9 p-2 py-4">
-        <p className="text-black/90 text-[10px] font-bold pops">{member._id}</p>
+        <p className="text-black/90 text-[10px] font-bold pops">{member.id}</p>
         <p className="text-black/90 col-span-2 text-[10px] font-bold pops">
-          --
+          {member.firstName} {member.lastName}
         </p>
         <p className="text-black/90 text-[10px] font-bold pops">
-          {member.personalDetails.gender}
+          {member.gender}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">--</p>
         <p className="text-black/90 text-[10px] font-bold pops">
-          {member.personalDetails.dob}
+          {member.phoneNumber}
+        </p>
+        <p className="text-black/90 text-[10px] font-bold pops">
+          {member.dateOfBirth}
         </p>
         <p className="text-black/90 text-[10px] font-bold pops">
           {member.status}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">--</p>
-        <p className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
+        <p className="text-black/90 text-[10px] font-bold pops">
+          {member.country}
+        </p>
+        <div className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
           <button className="hover:bg-gray-200 p-1.5 rounded-full cursor-pointer transition ease-in-out duration-300 hover:text-blue-500 text-gray-600">
             <TbEdit size={20} />
           </button>
@@ -36,7 +40,7 @@ export default function BandMembers() {
           <button className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-red-500 text-gray-600">
             <TbTrash size={20} />
           </button>
-        </p>
+        </div>
       </div>
     ))
   ) : (

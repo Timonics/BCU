@@ -1,8 +1,10 @@
+import { MemberDetails } from './member';
+
 export interface BandState {
   bands: BandDetails[];
   setBands: (value: BandDetails[]) => void;
-  selectedBand: SelectedBandDetails | null;
-  setSelectedBand: (value: SelectedBandDetails) => void;
+  selectedBand: BandDetails | null;
+  setSelectedBand: (value: BandDetails) => void;
   selectedBandId: string | null;
   setSelectedBandId: (value: string) => void;
   totalBands: number;
@@ -12,88 +14,26 @@ export interface BandState {
 export interface AddBandDetails {
   name: string;
   gender: string;
-  foundingDate?: string;
-  captain: string;
+  foundingDate: string;
+  bandCaptainId?: number;
+}
+
+export interface BandsResponse {
+  statusCode: number;
+  message: string;
+  data: BandDetails[];
+  timestamp: string
+}
+
+export interface BandResponse extends Omit<BandsResponse, 'data'> {
+  data: BandDetails;
 }
 
 export interface BandDetails {
-  _id: string;
-  id: string;
+  id: number;
   name: string;
   gender: string;
-  date: string;
-  member?: string[];
-  members?: string[];
-  captain: string;
-  leadership?: string[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-export interface AllBandsResponse {
-  message: string;
-  data: [
-    {
-      _id: string;
-      id: string;
-      name: string;
-      gender: string;
-      date: string;
-      member?: string[];
-      members?: string[];
-      captain: string;
-      leadership?: string[];
-      createdAt: string;
-      updatedAt: string;
-      __v: number;
-    }
-  ];
-  meta: {
-    total: number;
-  };
-}
-
-export interface BandResponse {
-  message: string;
-  data: SelectedBandDetails
-}
-
-export interface SelectedBandDetails {
-  _id: string;
-  id: string;
-  name: string;
-  gender: string;
-  date: string;
-  members: [
-    {
-      _id: string;
-      status: string;
-      personalDetails: {
-        gender: string;
-        dob: string;
-      };
-    }
-  ];
-  captain: string;
-  leadership: [
-    {
-      _id: string;
-      title: string;
-      band: string;
-      member: {
-        _id: string;
-        personalDetails: {
-          gender: string;
-        };
-      };
-      tenureDate: string;
-      createdAt: string;
-      updatedAt: string;
-      __v: number;
-    }
-  ];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  foundingDate: string;
+  members?: MemberDetails[];
+  bandCaptain?: MemberDetails | null;
 }

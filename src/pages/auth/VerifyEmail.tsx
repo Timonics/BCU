@@ -14,10 +14,9 @@ const VerifyEmail: React.FC = () => {
     if (isNaN(Number(value))) return;
 
     const newOtp = [...otp];
-    newOtp[index] = value.substring(value.length - 1); // Only take the last character
+    newOtp[index] = value.substring(value.length - 1);
     setOtp(newOtp);
 
-    // Move to next input if current input is filled
     if (value && index < 5) {
       inputRefs.current[index + 1].focus();
     }
@@ -25,10 +24,9 @@ const VerifyEmail: React.FC = () => {
 
   const handleKeyDown = (
     index: number,
-    e: React.KeyboardEvent<HTMLInputElement>
+    event: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    // Move to previous input on backspace if current input is empty
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
+    if (event.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
@@ -50,8 +48,8 @@ const VerifyEmail: React.FC = () => {
             className="size-22 text-center rounded-xl border-[1.33px] focus:border-[#009AF4] border-black/30 outline-none text-xl"
             key={index}
             value={value}
-            onChange={(e) => handleChange(index, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(index, e)}
+            onChange={(event) => handleChange(index, event.target.value)}
+            onKeyDown={(event) => handleKeyDown(index, event)}
             ref={(el) => {
               if (el) {
                 inputRefs.current[index] = el;

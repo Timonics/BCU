@@ -1,10 +1,10 @@
 export interface AuthState {
   isAuthenticated: boolean;
   setIsAuthenticated: (value: boolean) => void;
-  token: string | null
-  setToken: (value: string) => void
+  token: string | null;
+  setToken: (value: string) => void;
   verifyEmail: string | null;
-  setVerifyEmail: (value: string) => void
+  setVerifyEmail: (value: string) => void;
 }
 
 export interface AdminSignUpData {
@@ -12,7 +12,6 @@ export interface AdminSignUpData {
   lastName: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 export interface AdminSignInData {
@@ -24,20 +23,15 @@ export interface VerifyMail {
   email: string;
 }
 
-export interface LoginResponse {
+export interface AuthResponse {
+  statusCode: number;
   message: string;
   data: {
-    admin: {
-      _id: string;
-      email: {
-        verified: boolean;
-        value: string;
-      };
-      password: string;
-      createdAt: string;
-      updatedAt: string;
-      __v: number;
-    };
-    token: string;
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    access_token: string;
   };
+  timestamp: string;
 }

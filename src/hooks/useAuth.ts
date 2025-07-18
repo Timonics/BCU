@@ -1,31 +1,32 @@
-import axios from "axios";
+import axios from 'axios';
 import {
   AdminSignInData,
   AdminSignUpData,
-  LoginResponse,
-} from "../interfaces/auth";
-import { useLoadingStore } from "../stores/loadingStore";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router";
-import { useAuthStore } from "../stores/authStore";
+  AuthResponse,
+} from '../interfaces/auth';
+import { useLoadingStore } from '../stores/loadingStore';
+import { toast } from 'react-toastify';
+import { useAuthStore } from '../stores/authStore';
 
 export const useAuth = () => {
-  const navigate = useNavigate();
-  const dbUrl = "https://bcu.candsyf.org/admin/";
-  const { setIsAuthenticated, setToken, setVerifyEmail } = useAuthStore();
+  const dbUrl = 'https://bcu-backend-ckde.onrender.com/auth/';
+  const { setIsAuthenticated, setToken } = useAuthStore();
   const { setIsLoading } = useLoadingStore();
 
   const adminSignup = async (signUpData: AdminSignUpData) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${dbUrl}signup`, signUpData);
-      const registerResponse = response.data;
-      setIsLoading(false);
-      toast.success("Successfully registered admin");
-      console.log(registerResponse);
+      const response = await axios.post(`${dbUrl}register`, signUpData);
+      const registerResponse = response.data as AuthResponse;
+
+      setToken(registerResponse.data.access_token);
+
+      toast.success('Successfully registered admin');
     } catch (err: any) {
+      toast.error('Error registering admin');
+      console.error('Error: ', err);
+    } finally {
       setIsLoading(false);
-      console.error("Error: ", err);
     }
   };
 
@@ -33,46 +34,46 @@ export const useAuth = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(`${dbUrl}login`, signInData);
-      const loginResponse = response.data as LoginResponse;
+      const loginResponse = response.data as AuthResponse;
 
-      toast.success("Successfully logged in");
-      setIsLoading(false);
-      setToken(loginResponse.data.token);
+      setToken(loginResponse.data.access_token);
 
-      const { data } = loginResponse;
-      if (data.admin.email.verified) {
-        setIsAuthenticated(true);
-      } else {
-        setVerifyEmail(data.admin.email.value);
-        navigate("../auth/verify-email");
-      }
+      setIsAuthenticated(true);
+      toast.success('Successfully logged in');
     } catch (err: any) {
-      toast.error(err.message);
+      toast.error(
+        err.response
+          ? err.response.data.statusCode === 500
+            ? 'Internal Server Error'
+            : err.response.data.message.message
+          : err.message,
+      );
+      console.error('Error: ', err);
+    } finally {
       setIsLoading(false);
-      console.error("Error: ", err);
     }
   };
 
-  const verifyEmail = async (verifyData: {email: string, otp: string}) => {
+  const verifyEmail = async (verifyData: { email: string; otp: string }) => {
     try {
       await axios.post(`${dbUrl}verify-email`, verifyData);
-      toast.success("Email verified successfully");
+      toast.success('Email verified successfully');
     } catch (err: any) {
       toast.error(err.message);
       setIsLoading(false);
-      console.error("Error: ", err);
+      console.error('Error: ', err);
     }
   };
 
   const logout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem("bcu-auth-storage");
+    localStorage.removeItem('bcu-auth-storage');
   };
 
   return {
     adminSignin,
     adminSignup,
     logout,
-    verifyEmail
+    verifyEmail,
   };
 };

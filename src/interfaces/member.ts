@@ -1,3 +1,18 @@
+import { BandDetails } from './bands';
+import { LeadershipPosition } from './leadership';
+import { UnitDetails } from './unit';
+
+export interface MembershipState {
+  members: MemberDetails[];
+  setMembers: (value: MemberDetails[]) => void;
+  selectedBand: string | null;
+  setSelectedBand: (value: string) => void;
+  selectedUnit: string | null;
+  setSelectedUnit: (value: string) => void;
+  selectedBaptismalStatus: string | null;
+  setSelectedBaptismalStatus: (value: string) => void;
+}
+
 export interface Member {
   id: number;
   name: string;
@@ -8,72 +23,60 @@ export interface Member {
   status: string;
 }
 
-export interface MembershipState {
-  members: MemberDetails[];
-  setMembers: (value: MemberDetails[]) => void;
+export interface MemberDetails {
+  id: number;
+  firstName: string;
+  lastName: string;
+  otherNames: string;
+  gender: string;
+  email: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  maritalStatus: string;
+  stateOfOrigin: string;
+  address: string;
+  country: string;
+  residentialState: string;
+  city: string;
+  localGovernmentArea: string;
+  status: string;
+  nextOfKinFullName: string;
+  nextOfKinRelationship: string;
+  nextOfKinPhoneNumber: string;
+  baptismalStatus: boolean;
+  locationOfBaptism: string;
+  institutionName: string;
+  qualification: string;
+  courseOfStudy: string;
+  startDate: string;
+  endDate: string;
+  professionalQualifications: string;
+  vocationalQualification: string;
+  placeOfWork: string;
+  officeAddress: string;
+  workState: string;
+  workLGA: string;
+  workCountry: string;
+  bandId: number;
+  unitId: number;
+  band: Partial<BandDetails> | null;
+  unit: Partial<UnitDetails> | null;
+  leadingBandId: number;
+  leadingBand: Partial<BandDetails> | null;
+  leadingPositionId: number;
+  leadershipPosition: LeadershipPosition | null;
 }
 
 export interface MemberResponse {
+  statusCode: number;
   message: string;
-  data: MemberDetails[];
-  meta: MemberMetaData;
-}
-
-export interface MemberDetails {
-  academicsQualification: {
-    LGA: string;
-    courseOfStudy: string;
-    endDate: string;
-    institution: string;
-    officeAddress: string;
-    origin: string;
-    placeOfWork: string;
-    professionalQualification: string;
-    qualification: string;
-    startDate: string;
-    state: string;
-    vocationalQualification: string;
+  data: {
+    members: MemberDetails[];
+    meta: {
+      totalMembers: number;
+      totalMaleMembers: number;
+      totalFemaleMembers: number;
+    };
   };
-  churchInformation: {
-    band: string;
-    baptisimalLocation: string;
-    baptisimalStatus: string;
-    committee: string;
-    nextKinName: string;
-    nextKinPhone: string;
-    nextKinRelationship: string;
-    ordinationRank: string;
-    unit: string;
-  };
-  createdAt: string;
-  memberId: string;
-  personalDetails: {
-    LGA: string;
-    address: string;
-    city: string;
-    country: string;
-    dob: string;
-    email: string;
-    gender: string;
-    maritalStatus: string;
-    "name.first": string;
-    "name.last": string;
-    "name.other": string;
-    origin: string;
-    "phone.value": string;
-    state: string;
-  };
-  status: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
-}
-
-export interface MemberMetaData {
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  limit: number | null;
-  page: number | null;
-  total: number;
-  totalPages: number | null;
+  timestamp: string;
 }

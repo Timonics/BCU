@@ -4,4 +4,6 @@ import { LoadingState } from "../interfaces/state";
 export const useLoadingStore = create<LoadingState>((set) => ({
   isLoading: false,
   setIsLoading: (value: boolean) => set({ isLoading: value }),
+  memberLoading: false,
+  setMemberLoading: (value: boolean) => set({ memberLoading: value }),
 }));

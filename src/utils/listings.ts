@@ -27,6 +27,11 @@ export const units = [
   "Finance",
 ];
 
+export const baptismalStatus = [
+  'Already Baptised',
+  "Not yet Baptised"
+]
+
 export const classes = ["ETS", "Baptismal", "Pre-youth", "Full-member"];
 
 export const comittees = [

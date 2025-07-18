@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { useBandStore } from "../../stores/bandStore";
-import Loading from "../../components/loading";
-import { useLoadingStore } from "../../stores/loadingStore";
-import { useBand } from "../../hooks/useBand";
-import { TbEdit, TbEye, TbTrash } from "react-icons/tb";
+import React, { useEffect } from 'react';
+import { useBandStore } from '../../stores/bandStore';
+import Loading from '../../components/loading';
+import { useLoadingStore } from '../../stores/loadingStore';
+import { useBand } from '../../hooks/useBand';
+import { TbEdit, TbEye, TbTrash } from 'react-icons/tb';
 
 const AllBandMembers: React.FC = () => {
   const { bands } = useBandStore();
@@ -21,10 +21,12 @@ const AllBandMembers: React.FC = () => {
           <p>{band.id}</p>
           <p>{band.name}</p>
           <p>{band.gender}</p>
-          <p>{band.date.slice(0, 10)}</p>
-          <p>{band.captain}</p>
+          <p>{band.foundingDate}</p>
+          <p>
+            {band.bandCaptain?.firstName} {band.bandCaptain?.lastName}
+          </p>
           <p>{band.members ? band.members.length : 0}</p>
-          <p className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
+          <div className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
             <button className="hover:bg-gray-200 p-1.5 rounded-full cursor-pointer transition ease-in-out duration-300 hover:text-blue-500 text-gray-600">
               <TbEdit size={20} />
             </button>
@@ -35,7 +37,7 @@ const AllBandMembers: React.FC = () => {
             <button className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-red-500 text-gray-600">
               <TbTrash size={20} />
             </button>
-          </p>
+          </div>
         </div>
       ))
     ) : (

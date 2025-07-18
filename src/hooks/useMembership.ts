@@ -1,16 +1,23 @@
-import axios from "axios";
-import { useAuthStore } from "../stores/authStore";
-import { MemberResponse } from "../interfaces/member";
-import { useMembershipStore } from "../stores/membershipStore";
-import { useLoadingStore } from "../stores/loadingStore";
+import axios from 'axios';
+import { useAuthStore } from '../stores/authStore';
+import { MemberDetails, MemberResponse } from '../interfaces/member';
+import { useMembershipStore } from '../stores/membershipStore';
+import { useLoadingStore } from '../stores/loadingStore';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 
 export const useMembership = () => {
+  const navigate = useNavigate();
   const { token } = useAuthStore();
-  const { setIsLoading } = useLoadingStore();
+  const { setIsLoading, setMemberLoading } = useLoadingStore();
   const { setMembers } = useMembershipStore();
-  const dbUrl = "https://bcu.candsyf.org/membership";
+  const dbUrl = 'https://bcu-backend-ckde.onrender.com/members';
 
-  const getAllMembers = async (q?: string, page?: number, limit?: number) => {
+  const getAllMembers = async (
+    query?: string,
+    page?: number,
+    limit?: number,
+  ) => {
     setIsLoading(true);
     try {
       const response = await axios.get(`${dbUrl}`, {
@@ -18,18 +25,19 @@ export const useMembership = () => {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          q,
+          query,
           page,
           limit,
         },
       });
       const membershipResponse = response.data as MemberResponse;
-      console.log(membershipResponse.data);
-      setMembers(membershipResponse.data);
+      setMembers(membershipResponse.data.members);
       setIsLoading(false);
     } catch (err) {
+      toast.error('Error fetching members');
+      console.error('Error: ', err);
+    } finally {
       setIsLoading(false);
-      console.error("Error: ", err);
     }
   };
 
@@ -43,9 +51,33 @@ export const useMembership = () => {
       const memberResponse = response.data;
       console.log(memberResponse);
     } catch (err) {
-      console.error("Error: ", err);
+      toast.error('Error fetching member');
+      console.error('Error: ', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return { getAllMembers, getMember };
+  const addMember = async (memberData: Partial<MemberDetails>) => {
+    setMemberLoading(true);
+    try {
+      await axios.post(`${dbUrl}/add-member`, memberData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      toast.success('Successfully added member');
+      navigate('/members', { state: { shouldRefresh: true } });
+    } catch (err: any) {
+      toast.error(
+        err.response.data ? err.response.data.message : 'Internal Server Error',
+      );
+      console.error('Error: ', err);
+    } finally {
+      setMemberLoading(false);
+    }
+  };
+
+  return { getAllMembers, getMember, addMember };
 };

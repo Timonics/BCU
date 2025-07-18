@@ -4,7 +4,6 @@ import { persist } from "zustand/middleware";
 
 interface ExtendedAuthState extends AuthState {
   authTimeStamp?: number;
-  setIsAuthenticated: (value: boolean) => void;
 }
 
 const AUTH_EXPIRATION_TIME = 3600000;
@@ -17,7 +16,7 @@ export const useAuthStore = create<ExtendedAuthState>()(
       setIsAuthenticated: (value: boolean) =>
         set({
           isAuthenticated: value,
-          authTimeStamp: value ? Date.now() : undefined,
+          authTimeStamp: value  ? Date.now() : undefined,
         }),
       token: null,
       setToken: (value: string) => set({ token: value }),

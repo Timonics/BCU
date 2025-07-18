@@ -11,7 +11,7 @@ const CreateNewBand: React.FC = () => {
     name: "",
     gender: "",
     foundingDate: "",
-    captain: "",
+    bandCaptainId: 0,
   });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +58,7 @@ const CreateNewBand: React.FC = () => {
           <input
             className="member-input outline-none"
             name="captain"
-            value={newBandData.captain}
+            value={newBandData.bandCaptainId}
             onChange={handleChange}
           />
         </div>

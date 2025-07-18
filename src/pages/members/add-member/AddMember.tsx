@@ -1,9 +1,15 @@
-import React from "react";
-import logo from "../../../assets/dashLogo.png";
-import { Link, NavLink, Outlet } from "react-router";
-import { addMemberSteps } from "../../../utils/addMemberSteps";
+import React from 'react';
+import logo from '../../../assets/dashLogo.png';
+import { Link, NavLink, Outlet, useLocation } from 'react-router';
+import { addMemberSteps } from '../../../utils/addMemberSteps';
+import { useLoadingStore } from '../../../stores/loadingStore';
+import Loading from '../../../components/loading';
 
 const AddMember: React.FC = () => {
+  const location = useLocation();
+  const pathName = location.pathname.split('/').at(-1);
+  const { memberLoading } = useLoadingStore();
+
   const addMemberStepsElements = addMemberSteps.map((step) => {
     const Icon = step.icon;
     return (
@@ -12,7 +18,7 @@ const AddMember: React.FC = () => {
         to={step.link}
         className={({ isActive }) =>
           `py-2 px-4 text-sm text-[#1E1E1E] flex items-center gap-2 ${
-            isActive && "bg-[#009AF4]/20 font-bold text-[#009AF4]"
+            isActive && 'bg-[#009AF4]/20 font-bold text-[#009AF4]'
           }`
         }
       >
@@ -23,6 +29,7 @@ const AddMember: React.FC = () => {
       </NavLink>
     );
   });
+
   return (
     <>
       <div className="absolute top-0 left-0 h-full w-full backdrop-blur-sm" />
@@ -38,18 +45,25 @@ const AddMember: React.FC = () => {
         </div>
         <div className="w-4/6 bg-white flex flex-col overflow-y-auto p-4 gap-4">
           <Link
-            to={".."}
+            to={'..'}
             className="px-3 py-1.5 pops text-sm rounded-lg bg-[#009AF4] text-white font-semibold ml-auto"
           >
             Back
           </Link>
           <div className="flex flex-col gap-5">
-            <p className="text-2xl pops font-bold">
-              Fill in your information correctly
+            <p
+              className={`${
+                pathName === 'summary' ? 'text-3xl' : 'text-2xl'
+              }  pops font-bold`}
+            >
+              {pathName === 'summary'
+                ? 'Summary'
+                : 'Fill in your information correctly'}
             </p>
             {<Outlet />}
           </div>
         </div>
+        {memberLoading && <Loading />}
       </div>
     </>
   );

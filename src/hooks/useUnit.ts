@@ -1,15 +1,15 @@
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useAuthStore } from "../stores/authStore";
-import { useLoadingStore } from "../stores/loadingStore";
-import { useUnitStore } from "../stores/unitStore";
-import { AllUnitsResponse, UnitsResponse } from "../interfaces/unit";
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useAuthStore } from '../stores/authStore';
+import { useLoadingStore } from '../stores/loadingStore';
+import { useUnitStore } from '../stores/unitStore';
+import { AddUnit, UnitResponse, UnitsResponse } from '../interfaces/unit';
 
 export const useUnit = () => {
-  const dbUrl = "https://bcu.candsyf.org/core/unit";
+  const dbUrl = 'https://bcu-backend-ckde.onrender.com/units';
   const { token } = useAuthStore();
   const { setIsLoading } = useLoadingStore();
-  const { setUnits, setTotalUnits, setSelectedUnit } = useUnitStore();
+  const { setUnits, setSelectedUnit } = useUnitStore();
 
   const getAllUnits = async () => {
     setIsLoading(true);
@@ -19,14 +19,13 @@ export const useUnit = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      const bandResponse = response.data as AllUnitsResponse;
+      const bandResponse = response.data as UnitsResponse;
       setUnits(bandResponse.data);
-      setTotalUnits(bandResponse.meta.total);
-      setIsLoading(false);
     } catch (err: any) {
-      setIsLoading(false);
       toast.error(err.message);
-      console.error("Error: ", err);
+      console.error('Error: ', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -38,25 +37,29 @@ export const useUnit = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      const unitResponse = response.data as UnitsResponse;
+      const unitResponse = response.data as UnitResponse;
       setSelectedUnit(unitResponse.data);
-      setIsLoading(false);
     } catch (err: any) {
-      setIsLoading(false);
       toast.error(err.message);
-      console.error("Error: ", err);
+      console.error('Error: ', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const addUnit = async () => {
+  const addUnit = async (unitData: AddUnit) => {
     try {
-      await axios.get(`${dbUrl}`)
-    } catch(err: any) {
+      await axios.post(`${dbUrl}add-unit`, unitData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (err: any) {
       setIsLoading(false);
       toast.error(err.message);
-      console.error("Error: ", err);
+      console.error('Error: ', err);
     }
-  }
+  };
 
   return { getAllUnits, getUnit, addUnit };
 };

@@ -28,23 +28,23 @@ const BandInfo: React.FC<BandProps> = ({
     getBand(bandId);
   }, [bandId]);
 
-  const BandLeadershipElements =
-    selectedBand !== null && selectedBand.leadership.length ? (
-      selectedBand?.leadership?.map((member) => (
-        <div className="grid grid-cols-6 p-4 py-4 gap-5 items-center text-sm font-medium text-black/75">
-          <p>{member.title}</p>
-          <p>--</p>
-          <p>--</p>
-          <p>--</p>
-          <p>--</p>
-          <p>--</p>
-        </div>
-      ))
-    ) : (
-      <div className="h-[210px] flex justify-center items-center text-2xl font-bold pops">
-        <p>Add Band Leadership to view</p>
-      </div>
-    );
+  // const BandLeadershipElements =
+  //   selectedBand !== null && selectedBand.leadership.length ? (
+  //     selectedBand?.leadership?.map((member) => (
+  //       <div className="grid grid-cols-6 p-4 py-4 gap-5 items-center text-sm font-medium text-black/75">
+  //         <p>{member.title}</p>
+  //         <p>--</p>
+  //         <p>--</p>
+  //         <p>--</p>
+  //         <p>--</p>
+  //         <p>--</p>
+  //       </div>
+  //     ))
+  //   ) : (
+  //     <div className="h-[210px] flex justify-center items-center text-2xl font-bold pops">
+  //       <p>Add Band Leadership to view</p>
+  //     </div>
+  //   );
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -84,8 +84,8 @@ const BandInfo: React.FC<BandProps> = ({
           </div>
           {selectedBand !== null && (
             <div className="relative">
-              {BandLeadershipElements}
-              {isLoading && <Loading />}
+              {/* {BandLeadershipElements} */}
+              {/* {isLoading && <Loading />} */}
             </div>
           )}
         </div>

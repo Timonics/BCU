@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { LuCloudDownload } from "react-icons/lu";
+import { useEffect, useState } from 'react';
+import { LuCloudDownload } from 'react-icons/lu';
 import {
   TbArrowLeft,
   TbArrowRight,
@@ -8,20 +8,19 @@ import {
   TbPlus,
   TbTrash,
   TbUser,
-} from "react-icons/tb";
-import { viewOptions } from "../../utils/viewOptions";
-import { Link, useLocation } from "react-router";
-import { useMembership } from "../../hooks/useMembership";
-import { useMembershipStore } from "../../stores/membershipStore";
-import Loading from "../../components/loading";
-import { useLoadingStore } from "../../stores/loadingStore";
-import { colorCode } from "../../utils/colorCode";
+} from 'react-icons/tb';
+import { viewOptions } from '../../utils/viewOptions';
+import { Link, useLocation } from 'react-router';
+import { useMembership } from '../../hooks/useMembership';
+import { useMembershipStore } from '../../stores/membershipStore';
+import Loading from '../../components/loading';
+import { useLoadingStore } from '../../stores/loadingStore';
+import { colorCode } from '../../utils/colorCode';
 
 const MembersListing = ({
   gender,
   band,
   unit,
-  churchclass,
   filterIsSelected,
   searchTerm,
 }: {
@@ -32,28 +31,29 @@ const MembersListing = ({
   filterIsSelected: boolean;
   searchTerm: string;
 }) => {
-  const { isLoading } = useLoadingStore();
+  const { isLoading, setIsLoading } = useLoadingStore();
   const location = useLocation();
   const { getAllMembers } = useMembership();
   const { members } = useMembershipStore();
   let memberPageIsActive: boolean = false;
-  if (location.pathname === "/members") memberPageIsActive = true;
+  if (location.pathname === '/members') memberPageIsActive = true;
 
   //const [addMemberOpen, setAddMemberOpen] = useState<boolean>(false);
-  const [filterSelected, setFilterSelected] = useState<string>("View all");
+  const [filterSelected, setFilterSelected] = useState<string>('View all');
 
   useEffect(() => {
+    if (location.state?.shouldRefresh) setIsLoading(true);
     getAllMembers();
-  }, [members.length, gender, band, unit]);
+  }, [location.state?.shouldRefresh]);
 
   const viewOptionsElement = viewOptions.map((option, index) => (
     <button
       key={index}
       className={`border-gray-950/30 py-1.5 px-2 ${
-        index === 0 ? "rounded-l-lg border" : "border border-l-0"
-      } ${index === 3 && "rounded-r-lg"} cursor-pointer ${
+        index === 0 ? 'rounded-l-lg border' : 'border border-l-0'
+      } ${index === 3 && 'rounded-r-lg'} cursor-pointer ${
         filterSelected.toLowerCase() === option.type.toLowerCase() &&
-        "bg-black/15 font-semibold"
+        'bg-black/15 font-semibold'
       }`}
       onClick={() => setFilterSelected(option.type)}
     >
@@ -63,40 +63,40 @@ const MembersListing = ({
 
   const filteredMembers = members.filter(
     (member) =>
-      (gender === "" ||
-        member.personalDetails.gender.toLowerCase() ===
-          gender?.toLowerCase()) &&
-      (band === "" ||
-        member.churchInformation.band.toLowerCase() === band?.toLowerCase()) &&
-      (unit === "" ||
-        member.churchInformation.unit.toLowerCase() === unit?.toLowerCase()) &&
-      (churchclass === "" ||
-        member.churchInformation.committee.toLowerCase() ===
-          churchclass?.toLowerCase())
+      (gender === '' ||
+        member.gender.toLowerCase() === gender?.toLowerCase()) &&
+      (band === '' ||
+        member.band?.name?.toLowerCase() === `${band} band`.toLowerCase()) &&
+      (unit === '' || member.unit?.name?.toLowerCase() === unit?.toLowerCase()),
+    // (churchclass === '' ||
+    //   member.churchInformation.committee.toLowerCase() ===
+    //     churchclass?.toLowerCase()),
   );
 
   const baseMembers = filterIsSelected
     ? searchTerm
       ? filteredMembers.filter((member) =>
-          `${member.personalDetails["name.last"]}${" "}${member.personalDetails["name.last"]}`
+          `${member.firstName}${' '}${member.lastName}`
+            .replace(' ', '')
             .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+            .includes(searchTerm.replace(' ', '').toLowerCase()),
         )
       : filteredMembers
     : searchTerm
-    ? members.filter((member) =>
-        `${member.personalDetails["name.last"]}${" "}${member.personalDetails["name.last"]}`
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      )
-    : members;
+      ? members.filter((member) =>
+          `${member.firstName}${' '}${member.lastName}`
+            .replace(' ', '')
+            .toLowerCase()
+            .includes(searchTerm.replace(' ', '').toLowerCase()),
+        )
+      : members;
 
   const statusFilteredMembers =
-    filterSelected === "View all"
+    filterSelected === 'View all'
       ? baseMembers
       : baseMembers.filter(
           (member) =>
-            member.status.toLowerCase() === filterSelected.toLowerCase()
+            member.status.toLowerCase() === filterSelected.toLowerCase(),
         );
 
   const membersElements = statusFilteredMembers.length ? (
@@ -104,19 +104,18 @@ const MembersListing = ({
       const { color, background } = colorCode(member.status);
       return (
         <div className="grid grid-cols-9 items-center px-2 py-4 text-xs font-medium text-black/75">
-          <p className="">{member.memberId}</p>
+          <p className="">{member.id}</p>
           <div className="col-span-2 flex items-center gap-1">
             <div className="flex items-center justify-center size-8 rounded-full bg-slate-400">
               <TbUser size={13} />
             </div>
             <p>
-              {member.personalDetails["name.last"]}{" "}
-              {member.personalDetails["name.first"]}
+              {member.firstName} {member.lastName}
             </p>
           </div>
-          <p className="">{member.personalDetails.gender}</p>
-          <p className="">{member.churchInformation.band}</p>
-          <p className="">{member.churchInformation.unit}</p>
+          <p className="">{member.gender}</p>
+          <p className="">{member.band?.name}</p>
+          <p className="">{member.unit?.name}</p>
           <p className="">--</p>
           <p
             className="border w-fit text-[10px] p-2 rounded-3xl"
@@ -125,9 +124,9 @@ const MembersListing = ({
               backgroundColor: background,
             }}
           >
-            {member.status.split("")[0].toUpperCase() + member.status.slice(1)}
+            {member.status.split('')[0].toUpperCase() + member.status.slice(1)}
           </p>
-          <p className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
+          <div className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
             <button className="hover:bg-gray-200 p-1.5 rounded-full cursor-pointer transition ease-in-out duration-300 hover:text-blue-500 text-gray-600">
               <TbEdit size={20} />
             </button>
@@ -138,7 +137,7 @@ const MembersListing = ({
             <button className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-red-500 text-gray-600">
               <TbTrash size={20} />
             </button>
-          </p>
+          </div>
         </div>
       );
     })
@@ -146,10 +145,10 @@ const MembersListing = ({
     <div className="h-[210px] relative flex items-center justify-center">
       {isLoading && <Loading />}
       <p className="text-3xl font-bold pops">
-        {filterSelected === "View all"
+        {filterSelected === 'View all'
           ? filterIsSelected && !filteredMembers.length
-            ? "No Data found for the selected filter"
-            : "Add Members to view"
+            ? 'No Data found for the selected filter'
+            : 'Add Members to view'
           : `No ${filterSelected} Members`}
       </p>
     </div>
@@ -163,9 +162,8 @@ const MembersListing = ({
         </p>
         {memberPageIsActive ? (
           <Link
-            to={"add-member"}
+            to={'add-member'}
             className="flex items-center gap-1 cursor-pointer text-white text-sm bg-[#009AF4] px-6 py-2.5 rounded-lg"
-            //onClick={() => setAddMemberOpen(true)}
           >
             <TbPlus className="border-[1.4px] p-[0.4px] font-bold rounded-full" />
             <h3 className="text-sm font-semibold pops">Add Member</h3>
