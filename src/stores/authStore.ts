@@ -19,9 +19,9 @@ export const useAuthStore = create<ExtendedAuthState>()(
           authTimeStamp: value ? Date.now() : undefined,
         }),
       token: null,
-      setToken: (value: string) => set({ token: value }),
+      setToken: (value: string | null) => set({ token: value }),
       verifyEmail: null,
-      setVerifyEmail: (value: string) => set({ verifyEmail: value }),
+      setVerifyEmail: (value: string | null) => set({ verifyEmail: value }),
     }),
     {
       name: 'bcu-auth-storage',

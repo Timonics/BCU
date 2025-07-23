@@ -2,9 +2,9 @@ export interface AuthState {
   isAuthenticated: boolean;
   setIsAuthenticated: (value: boolean) => void;
   token: string | null;
-  setToken: (value: string) => void;
+  setToken: (value: string | null) => void;
   verifyEmail: string | null;
-  setVerifyEmail: (value: string) => void;
+  setVerifyEmail: (value: string | null) => void;
 }
 
 export interface AdminSignUpData {

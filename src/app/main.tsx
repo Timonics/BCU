@@ -26,6 +26,7 @@ import Summary from '../pages/members/add-member/Summary.tsx';
 import ClassManagement from '../pages/class-management/index.tsx';
 import Comittees from '../pages/comittees/index.tsx';
 import StateProvider from '../contexts/StateProvider.tsx';
+import { useAutoLogout } from './AutoLogout.tsx';
 
 const router = createBrowserRouter(
   [
@@ -87,9 +88,11 @@ const router = createBrowserRouter(
   },
 );
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <StateProvider>
+function App() {
+  useAutoLogout();
+
+  return (
+    <>
       <RouterProvider router={router} />
       <ToastContainer
         position="top-right"
@@ -99,6 +102,14 @@ createRoot(document.getElementById('root')!).render(
         pauseOnHover={true}
         hideProgressBar={true}
       />
+    </>
+  );
+}
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <StateProvider>
+      <App />
     </StateProvider>
   </StrictMode>,
 );
