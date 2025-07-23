@@ -18,14 +18,14 @@ interface MemberProps {
   churchclass: string | null;
   filterIsSelected: boolean;
   searchTerm: string;
-  genderIsOpen: boolean;
-  bandIsOpen: boolean;
-  unitIsOpen: boolean;
-  classIsOpen: boolean;
-  setGenderIsOpen: (value: React.SetStateAction<boolean>) => void;
-  setBandIsOpen: (value: React.SetStateAction<boolean>) => void;
-  setUnitIsOpen: (value: React.SetStateAction<boolean>) => void;
-  setClassIsOpen: (value: React.SetStateAction<boolean>) => void;
+  genderIsOpen?: boolean;
+  bandIsOpen?: boolean;
+  unitIsOpen?: boolean;
+  classIsOpen?: boolean;
+  setGenderIsOpen?: (value: React.SetStateAction<boolean>) => void;
+  setBandIsOpen?: (value: React.SetStateAction<boolean>) => void;
+  setUnitIsOpen?: (value: React.SetStateAction<boolean>) => void;
+  setClassIsOpen?: (value: React.SetStateAction<boolean>) => void;
 }
 
 const MembersListing = ({
@@ -270,10 +270,10 @@ const MembersListing = ({
         orderSortOpen && setOrderSortOpen(false);
         valueSortOpen && setValueSortOpen(false);
         entriesSortOpen && setEntiresSortOpen(false);
-        genderIsOpen && setGenderIsOpen(false);
-        bandIsOpen && setBandIsOpen(false);
-        unitIsOpen && setUnitIsOpen(false);
-        classIsOpen && setClassIsOpen(false);
+        genderIsOpen && setGenderIsOpen?.(false);
+        bandIsOpen && setBandIsOpen?.(false);
+        unitIsOpen && setUnitIsOpen?.(false);
+        classIsOpen && setClassIsOpen?.(false);
       }}
     >
       <div className="flex justify-between items-center p-4 border-b border-black/30 ">
