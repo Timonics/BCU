@@ -8,16 +8,18 @@ import { useBandStore } from '../stores/bandStore';
 import { useLoadingStore } from '../stores/loadingStore';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '../stores/authStore';
+import { url } from '../utils/db_url';
 
 export const useBand = () => {
-  const dbUrl = 'https://bcu-backend-ckde.onrender.com/bands';
+  const dbUrl = `${url}bands/`;
   const { token } = useAuthStore();
-  const { setBands,  setSelectedBand } = useBandStore();
+  const { setBands, setSelectedBand, setBandMetadata } = useBandStore();
   const { setIsLoading } = useLoadingStore();
 
   const addBand = async (bandDetails: AddBandDetails) => {
+    setIsLoading(true);
     try {
-      await axios.post(`${dbUrl}`, bandDetails, {
+      await axios.post(`${dbUrl}add-band`, bandDetails, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -27,19 +29,37 @@ export const useBand = () => {
     } catch (err) {
       console.error('Error: ', err);
       toast.error('Error adding band');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const getAllBands = async () => {
+  const getAllBands = async (
+    page?: number,
+    limit?: number,
+    sortBy?: string,
+    sortOrder?: string,
+  ) => {
     setIsLoading(true);
     try {
       const response = await axios.get(`${dbUrl}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          ...(page && { page }),
+          ...(limit && { limit }),
+          ...(sortBy && { sortBy }),
+          ...(sortOrder && { sortOrder }),
+        },
       });
       const bandResponse = response.data as BandsResponse;
-      setBands(bandResponse.data);
+      setBands(
+        typeof bandResponse.data === 'object' ? bandResponse.data.bands : [],
+      );
+      setBandMetadata(
+        typeof bandResponse.data === 'object' ? bandResponse.data.meta : {},
+      );
     } catch (err: any) {
       toast.error(err.message);
       console.error('Error: ', err);
@@ -48,21 +68,22 @@ export const useBand = () => {
     }
   };
 
-  const getBand = async (bandId: string) => {
+  const getBand = async (bandId: number) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${dbUrl}/${bandId}`, {
+      const response = await axios.get(`${dbUrl}${bandId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const bandResponse = response.data as BandResponse;
       setSelectedBand(bandResponse.data);
-      setIsLoading(false);
     } catch (err: any) {
       setIsLoading(false);
       toast.error(err.message);
       console.error('Error: ', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 

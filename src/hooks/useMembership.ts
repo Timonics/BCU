@@ -5,18 +5,20 @@ import { useMembershipStore } from '../stores/membershipStore';
 import { useLoadingStore } from '../stores/loadingStore';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { url } from '../utils/db_url';
 
 export const useMembership = () => {
   const navigate = useNavigate();
   const { token } = useAuthStore();
   const { setIsLoading, setMemberLoading } = useLoadingStore();
-  const { setMembers } = useMembershipStore();
-  const dbUrl = 'https://bcu-backend-ckde.onrender.com/members';
+  const { setMembers, setMemberMetadata } = useMembershipStore();
+  const dbUrl = `${url}members/`;
 
   const getAllMembers = async (
-    query?: string,
     page?: number,
     limit?: number,
+    sortBy?: string,
+    sortOrder?: string,
   ) => {
     setIsLoading(true);
     try {
@@ -25,16 +27,28 @@ export const useMembership = () => {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          query,
-          page,
-          limit,
+          ...(page && { page }),
+          ...(limit && { limit }),
+          ...(sortBy && { sortBy }),
+          ...(sortOrder && { sortOrder }),
         },
       });
+
       const membershipResponse = response.data as MemberResponse;
-      setMembers(membershipResponse.data.members);
+      
+      setMembers(
+        typeof membershipResponse.data === 'object'
+          ? membershipResponse.data.members
+          : [],
+      );
+      setMemberMetadata(
+        typeof membershipResponse.data === 'object'
+          ? membershipResponse.data.meta
+          : {},
+      );
       setIsLoading(false);
-    } catch (err) {
-      toast.error('Error fetching members');
+    } catch (err: any) {
+      toast.error(err.message ? err.message : 'Error fetching members');
       console.error('Error: ', err);
     } finally {
       setIsLoading(false);

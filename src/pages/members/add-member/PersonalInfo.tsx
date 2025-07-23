@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import { genders } from '../../../utils/listings';
+import { genders } from '../../../constants/listings';
 import { useLocation } from 'react-router';
 import useStates from '../../../hooks/useStates';
 

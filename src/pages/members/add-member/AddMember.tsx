@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from '../../../assets/dashLogo.png';
 import { Link, NavLink, Outlet, useLocation } from 'react-router';
-import { addMemberSteps } from '../../../utils/addMemberSteps';
+import { addMemberSteps } from '../../../constants/addMemberSteps';
 import { useLoadingStore } from '../../../stores/loadingStore';
 import Loading from '../../../components/loading';
 

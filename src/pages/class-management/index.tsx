@@ -1,5 +1,5 @@
 import React from "react";
-import { classes } from "../../utils/listings";
+import { classes } from "../../constants/listings";
 import { Link, useLocation } from "react-router";
 import useStates from "../../hooks/useStates";
 import AllClassMembers from "./AllClassMembers";

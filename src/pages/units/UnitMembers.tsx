@@ -1,30 +1,34 @@
-import { TbEdit, TbEye, TbTrash } from "react-icons/tb";
-import Loading from "../../components/loading";
-import { useLoadingStore } from "../../stores/loadingStore";
-import { useUnitStore } from "../../stores/unitStore";
+import { TbEdit, TbEye, TbTrash } from 'react-icons/tb';
+import Loading from '../../components/loading';
+import { useLoadingStore } from '../../stores/loadingStore';
+import { useUnitStore } from '../../stores/unitStore';
 
 export default function UnitMembers() {
   const { selectedUnit } = useUnitStore();
   const { isLoading } = useLoadingStore();
 
-  const memberElements = selectedUnit ? (
+  console.log(selectedUnit);
+
+  const memberElements = selectedUnit?.members?.length ? (
     selectedUnit.members?.map((member) => (
-      <div className="grid grid-cols-9 p-2 py-4">
-        <p className="text-black/90 text-[10px] font-bold pops">{member.id}</p>
-        <p className="text-black/90 col-span-2 text-[10px] font-bold pops">
-          --
+      <div className="grid grid-cols-9 p-4">
+        <p className="text-black/90 text-[12px] font-medium pops">{member.id}</p>
+        <p className="text-black/90 col-span-2 text-[12px] font-medium pops">
+          {member.firstName} {member.lastName}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">
+        <p className="text-black/90 text-[12px] font-medium pops">
           {member.gender}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">--</p>
-        <p className="text-black/90 text-[10px] font-bold pops">
-          {member.dateOfBirth}
+        <p className="text-black/90 text-[12px] font-medium pops">
+          {member.phoneNumber}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">
-          {member.status}
+        <p className="text-black/90 text-[12px] font-medium pops">{member.dateOfBirth}</p>
+        <p className="text-black/90 text-[12px] font-medium pops">
+          {member.maritalStatus}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">--</p>
+        <p className="text-black/90 text-[12px] font-medium pops">
+          {member.country}
+        </p>
         <p className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
           <button className="hover:bg-gray-200 p-1.5 rounded-full cursor-pointer transition ease-in-out duration-300 hover:text-blue-500 text-gray-600">
             <TbEdit size={20} />

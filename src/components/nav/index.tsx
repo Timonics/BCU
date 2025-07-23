@@ -9,7 +9,7 @@ import {
 } from "react-icons/tb";
 
 import { NavLink } from "react-router";
-import { navItems } from "../../utils/navItems";
+import { navItems } from "../../constants/navItems";
 import { useAuth } from "../../hooks/useAuth";
 
 const Nav: React.FC = () => {

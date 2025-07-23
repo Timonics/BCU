@@ -37,7 +37,7 @@ export const useAuthStore = create<ExtendedAuthState>()(
               isAuthenticated: false,
               authTimeStamp: undefined,
               token: null,
-              verifyEmail: null, // Optional: Clear email
+              verifyEmail: null,
             });
           }
         }

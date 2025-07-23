@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TbPencil, TbSearch } from "react-icons/tb";
 import Button from "../../components/button";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { genders, classes, units } from "../../utils/listings";
+import { genders, classes, units } from "../../constants/listings";
 
 type BandProps = {
   classesName: string;

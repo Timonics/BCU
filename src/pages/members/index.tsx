@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { bands, classes, genders, units } from "../../utils/listings";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import MembersListing from "./MembersListing";
-import { TbSearch } from "react-icons/tb";
-import { Outlet } from "react-router";
+import React, { useState } from 'react';
+import { bands, classes, genders, units } from '../../constants/listings';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import MembersListing from './MembersListing';
+import { TbSearch } from 'react-icons/tb';
+import { Outlet } from 'react-router';
 
 const Members: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
@@ -15,13 +15,13 @@ const Members: React.FC = () => {
   const [unitIsOpen, setUnitIsOpen] = useState<boolean>(false);
   const [classIsOpen, setClassIsOpen] = useState<boolean>(false);
   const [filterIsSelected, setFilterIsSelected] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [filters, setFilters] = useState({
-    gender: "",
-    band: "",
-    unit: "",
-    churchclass: "",
+    gender: '',
+    band: '',
+    unit: '',
+    churchclass: '',
   });
 
   return (
@@ -57,15 +57,15 @@ const Members: React.FC = () => {
             onClick={() => setGenderIsOpen(!genderIsOpen)}
           >
             <p className="text-xs font-medium text-[#101828]">
-              {selectedGender ? selectedGender : "--select gender--"}
+              {selectedGender ? selectedGender : '--select gender--'}
             </p>
             <MdKeyboardArrowDown className="absolute right-2" />
             {genderIsOpen && (
-              <ul className="absolute top-[40px] left-0 w-full bg-white rounded-lg">
+              <ul className="absolute z-20 top-[40px] left-0 w-full bg-white rounded-lg">
                 {genders.map((gender, index) => (
                   <li
                     className={`p-2 text-[13px] text-[#404040] cursor-pointer ${
-                      index !== 1 && "border-b border-[#97979786]"
+                      index !== 1 && 'border-b border-[#97979786]'
                     }`}
                     onClick={() => {
                       setSelectedGender(gender.name);
@@ -90,15 +90,15 @@ const Members: React.FC = () => {
             onClick={() => setBandIsOpen(!bandIsOpen)}
           >
             <p className="text-xs font-medium text-[#101828]">
-              {selectedBand ? selectedBand : "--select band--"}
+              {selectedBand ? selectedBand : '--select band--'}
             </p>
             <MdKeyboardArrowDown className="absolute right-2" />
             {bandIsOpen && (
-              <ul className="absolute top-[40px] left-0 w-full bg-white rounded-lg">
+              <ul className="absolute z-20 top-[40px] left-0 w-full bg-white rounded-lg">
                 {bands.map((band, index) => (
                   <li
                     className={`p-2 text-[13px] text-[#404040] cursor-pointer ${
-                      index !== 11 && "border-b border-[#97979786]"
+                      index !== 11 && 'border-b border-[#97979786]'
                     }`}
                     onClick={() => {
                       setSelectedBand(band);
@@ -124,15 +124,15 @@ const Members: React.FC = () => {
             onClick={() => setUnitIsOpen(!unitIsOpen)}
           >
             <p className="text-xs font-medium text-[#101828]">
-              {selectedUnit ? selectedUnit : "--select unit--"}
+              {selectedUnit ? selectedUnit : '--select unit--'}
             </p>
             <MdKeyboardArrowDown className="absolute right-2" />
             {unitIsOpen && (
-              <ul className="absolute top-[40px] left-0 w-full bg-white rounded-lg">
+              <ul className="absolute z-20 top-[40px] left-0 w-full bg-white rounded-lg">
                 {units.map((unit, index) => (
                   <li
                     className={`p-2 text-[13px] text-[#404040] cursor-pointer ${
-                      index !== 5 && "border-b border-[#979797]"
+                      index !== 5 && 'border-b border-[#979797]'
                     }`}
                     onClick={() => {
                       setSelectedUnit(unit);
@@ -158,15 +158,15 @@ const Members: React.FC = () => {
             onClick={() => setClassIsOpen(!classIsOpen)}
           >
             <p className="text-xs font-medium text-[#101828]">
-              {selectedClass ? selectedClass : "--select class--"}
+              {selectedClass ? selectedClass : '--select class--'}
             </p>
             <MdKeyboardArrowDown className="absolute right-2" />
             {classIsOpen && (
-              <ul className="absolute top-[40px] left-0 w-full bg-white rounded-lg">
+              <ul className="absolute z-20 top-[40px] left-0 w-full bg-white rounded-lg">
                 {classes.map((cl, index) => (
                   <li
                     className={`p-2 text-[13px] text-[#404040] cursor-pointer ${
-                      index !== 3 && "border-b border-[#979797]"
+                      index !== 3 && 'border-b border-[#979797]'
                     }`}
                     onClick={() => {
                       setSelectedClass(cl);
@@ -194,6 +194,14 @@ const Members: React.FC = () => {
           churchclass={filters.churchclass}
           filterIsSelected={filterIsSelected}
           searchTerm={searchTerm}
+          genderIsOpen={genderIsOpen}
+          bandIsOpen={bandIsOpen}
+          unitIsOpen={unitIsOpen}
+          classIsOpen={classIsOpen}
+          setGenderIsOpen={setGenderIsOpen}
+          setBandIsOpen={setBandIsOpen}
+          setUnitIsOpen={setUnitIsOpen}
+          setClassIsOpen={setClassIsOpen}
         />
       </div>
       <Outlet />

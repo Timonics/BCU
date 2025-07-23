@@ -1,21 +1,32 @@
 import { useEffect, useState } from 'react';
 import { LuCloudDownload } from 'react-icons/lu';
-import {
-  TbArrowLeft,
-  TbArrowRight,
-  TbEdit,
-  TbEye,
-  TbPlus,
-  TbTrash,
-  TbUser,
-} from 'react-icons/tb';
-import { viewOptions } from '../../utils/viewOptions';
+import { TbEdit, TbEye, TbPlus, TbTrash, TbUser } from 'react-icons/tb';
+import { viewOptions } from '../../constants/viewOptions';
 import { Link, useLocation } from 'react-router';
 import { useMembership } from '../../hooks/useMembership';
 import { useMembershipStore } from '../../stores/membershipStore';
 import Loading from '../../components/loading';
 import { useLoadingStore } from '../../stores/loadingStore';
 import { colorCode } from '../../utils/colorCode';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import Pagination from '../../components/pagination';
+
+interface MemberProps {
+  gender: string | null;
+  band: string | null;
+  unit: string | null;
+  churchclass: string | null;
+  filterIsSelected: boolean;
+  searchTerm: string;
+  genderIsOpen: boolean;
+  bandIsOpen: boolean;
+  unitIsOpen: boolean;
+  classIsOpen: boolean;
+  setGenderIsOpen: (value: React.SetStateAction<boolean>) => void;
+  setBandIsOpen: (value: React.SetStateAction<boolean>) => void;
+  setUnitIsOpen: (value: React.SetStateAction<boolean>) => void;
+  setClassIsOpen: (value: React.SetStateAction<boolean>) => void;
+}
 
 const MembersListing = ({
   gender,
@@ -23,23 +34,34 @@ const MembersListing = ({
   unit,
   filterIsSelected,
   searchTerm,
-}: {
-  gender: string | null;
-  band: string | null;
-  unit: string | null;
-  churchclass: string | null;
-  filterIsSelected: boolean;
-  searchTerm: string;
-}) => {
+  genderIsOpen,
+  bandIsOpen,
+  unitIsOpen,
+  classIsOpen,
+  setGenderIsOpen,
+  setBandIsOpen,
+  setUnitIsOpen,
+  setClassIsOpen,
+}: MemberProps) => {
   const { isLoading, setIsLoading } = useLoadingStore();
   const location = useLocation();
   const { getAllMembers } = useMembership();
-  const { members } = useMembershipStore();
+  const { members, memberMetadata } = useMembershipStore();
   let memberPageIsActive: boolean = false;
   if (location.pathname === '/members') memberPageIsActive = true;
 
-  //const [addMemberOpen, setAddMemberOpen] = useState<boolean>(false);
+  const [orderSortOpen, setOrderSortOpen] = useState<boolean>(false);
+  const [valueSortOpen, setValueSortOpen] = useState<boolean>(false);
+  const [entriesSortOpen, setEntiresSortOpen] = useState<boolean>(false);
   const [filterSelected, setFilterSelected] = useState<string>('View all');
+  const [sortOrderSelected, setSortOrderSelected] = useState<string>('');
+  const [numberOfEntriesSelected, setNumberOfEntriesSelected] =
+    useState<string>('');
+  const [sortValueSelected, setSortValueSelected] = useState<string>('');
+
+  const [sortOrder, setSortOrder] = useState<string>('');
+  const [sortValue, setSortValue] = useState<string>('');
+  const [entriesValue, setEntriesValue] = useState<number>(10);
 
   useEffect(() => {
     if (location.state?.shouldRefresh) setIsLoading(true);
@@ -114,8 +136,8 @@ const MembersListing = ({
             </p>
           </div>
           <p className="">{member.gender}</p>
-          <p className="">{member.band?.name}</p>
-          <p className="">{member.unit?.name}</p>
+          <p className="">{member.band?.name ?? '--'}</p>
+          <p className="">{member.unit?.name ?? '--'}</p>
           <p className="">--</p>
           <p
             className="border w-fit text-[10px] p-2 rounded-3xl"
@@ -154,8 +176,106 @@ const MembersListing = ({
     </div>
   );
 
+  const sortByOrderElements = (
+    <div className="absolute top-[35px] rounded-lg bg-white left-0 w-full shadow-2xl">
+      {[
+        { name: 'Ascending Order', sortOrder: 'ASC' },
+        { name: 'Descending Order', sortOrder: 'DESC' },
+      ].map((order, index) => (
+        <div
+          key={index}
+          className="p-2 hover:bg-gray-100 cursor-pointer rounded-lg"
+          onClick={() => {
+            setOrderSortOpen(false);
+            setSortOrderSelected(order.name);
+            setSortOrder(order.sortOrder);
+            getAllMembers(
+              memberMetadata ? memberMetadata.currentPage : 1,
+              entriesValue,
+              sortValue ? sortValue : '',
+              order.sortOrder,
+            );
+          }}
+        >
+          {order.name}
+        </div>
+      ))}
+    </div>
+  );
+
+  const sortByValueElements = (
+    <div className="absolute top-[35px] z-10 rounded-lg bg-white left-0 w-full shadow-2xl">
+      {[
+        { name: 'ID', sortValue: 'id' },
+        { name: 'Gender', sortValue: 'gender' },
+        { name: 'First name', sortValue: 'firstName' },
+        { name: 'Last name', sortValue: 'lastName' },
+      ].map((value, index) => (
+        <div
+          key={index}
+          className="p-2 hover:bg-gray-100 cursor-pointer rounded-lg"
+          onClick={() => {
+            setValueSortOpen(false);
+            setSortValueSelected(value.name);
+            setSortValue(value.sortValue);
+            getAllMembers(
+              memberMetadata ? memberMetadata.currentPage : 1,
+              entriesValue,
+              value.sortValue,
+              sortOrder ? sortOrder : '',
+            );
+          }}
+        >
+          {value.name}
+        </div>
+      ))}
+    </div>
+  );
+
+  const numberOfEntriesElements = (
+    <div className="absolute top-[35px] z-10 rounded-lg bg-white left-0 w-full shadow-2xl">
+      {[
+        { name: '5 entries', entries: 5 },
+        { name: '10 entries', entries: 10 },
+        { name: '20 entries', entries: 20 },
+        { name: '30 entries', entries: 30 },
+        { name: '40 entries', entries: 40 },
+        { name: '50 entries', entries: 50 },
+      ].map((entries, index) => (
+        <div
+          key={index}
+          className="p-2 hover:bg-gray-100 cursor-pointer rounded-lg"
+          onClick={() => {
+            setEntiresSortOpen(false);
+            setNumberOfEntriesSelected(entries.name);
+            setEntriesValue(entries.entries);
+            getAllMembers(
+              memberMetadata ? memberMetadata.currentPage : 1,
+              entries.entries,
+              sortValue ? sortValue : '',
+              sortOrder ? sortOrder : '',
+            );
+          }}
+        >
+          {entries.name}
+        </div>
+      ))}
+    </div>
+  );
+
   return (
-    <div className="section">
+    <div
+      className="section mb-6"
+      onClick={() => {
+        orderSortOpen && setOrderSortOpen(false);
+        valueSortOpen && setValueSortOpen(false);
+        entriesSortOpen && setEntiresSortOpen(false);
+        genderIsOpen && setGenderIsOpen(false);
+        bandIsOpen && setBandIsOpen(false);
+        unitIsOpen && setUnitIsOpen(false);
+        classIsOpen && setClassIsOpen(false);
+      }}
+    >
       <div className="flex justify-between items-center p-4 border-b border-black/30 ">
         <p className="text-base font-bold flex gap-3 items-center">
           Members Listing
@@ -175,8 +295,49 @@ const MembersListing = ({
           </div>
         )}
       </div>
-      <div className=" flex items-center px-2 py-4 border-b border-black/30">
+      <div className=" flex items-center justify-between px-2 py-4 border-b border-black/30">
         <div className="flex text-xs">{viewOptionsElement}</div>
+        <div className="flex items-center gap-4 text-sm mr-4 font-semibold">
+          <div className="flex flex-col items-center justify-center gap-1">
+            <p className="text-xs">Sort by Order</p>
+            <div
+              className="bg-blue-50 rounded-lg px-6 py-1.5 flex items-center justify-between gap-4 relative cursor-pointer"
+              onClick={() => {
+                setOrderSortOpen(!orderSortOpen);
+              }}
+            >
+              {sortOrderSelected ? sortOrderSelected : 'Ascending Order'}
+              <MdKeyboardArrowDown />
+              {orderSortOpen && sortByOrderElements}
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-1">
+            <p className="text-xs">Sort by value</p>
+            <div
+              className="bg-blue-50 rounded-lg px-8 py-1.5 flex items-center justify-between gap-4 relative cursor-pointer"
+              onClick={() => {
+                setValueSortOpen(!valueSortOpen);
+              }}
+            >
+              {sortValueSelected ? sortValueSelected : 'ID'}
+              <MdKeyboardArrowDown />
+              {valueSortOpen && sortByValueElements}
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center gap-1">
+            <p className="text-xs">Number of entries</p>
+            <div
+              className="bg-blue-50 rounded-lg px-8 py-1.5 flex items-center justify-between gap-4 relative cursor-pointer"
+              onClick={() => {
+                setEntiresSortOpen(!entriesSortOpen);
+              }}
+            >
+              {numberOfEntriesSelected ? numberOfEntriesSelected : '10 entries'}
+              <MdKeyboardArrowDown />
+              {entriesSortOpen && numberOfEntriesElements}
+            </div>
+          </div>
+        </div>
       </div>
       <div className="grid grid-cols-9 p-2 py-4 border-b border-black/20 bg-black/5">
         <p className="text-black/90 text-[13px] font-bold pops">Member ID</p>
@@ -191,18 +352,24 @@ const MembersListing = ({
         <p className="text-black/90 text-[13px] font-bold pops">Action</p>
       </div>
       <div>
-        {membersElements}
-        <div className="p-4 flex justify-around items-center my-7">
-          <button className="nav-btn">
-            <TbArrowLeft size={20} />
-            Previous
-          </button>
-          <div></div>
-          <button className="nav-btn">
-            Next
-            <TbArrowRight size={20} />
-          </button>
+        <div className="relative">
+          {isLoading && <Loading />}
+          {membersElements}
         </div>
+        <Pagination
+          currentPage={memberMetadata?.currentPage!}
+          totalPages={memberMetadata?.totalPages!}
+          hasNext={memberMetadata?.hasNext!}
+          hasPrev={memberMetadata?.hasPrev!}
+          onPageChange={(page: number = memberMetadata?.currentPage!) =>
+            getAllMembers(
+              page,
+              entriesValue ? entriesValue : 10,
+              sortOrder ? sortOrder : '',
+              sortValue ? sortValue : '',
+            )
+          }
+        />
       </div>
     </div>
   );

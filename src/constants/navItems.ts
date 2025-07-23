@@ -1,6 +1,6 @@
 import { LuBoxes, LuCrown, LuLayers } from "react-icons/lu";
 import { PiNotebookBold } from "react-icons/pi";
-import { TbUsers, TbUsersGroup } from "react-icons/tb";
+import { TbUsers } from "react-icons/tb";
 
 export const navItems = [
     {
@@ -86,15 +86,15 @@ export const navItems = [
         },
       ],
     },
-    {
-      name: "Comittees",
-      icon: TbUsersGroup ,
-      link: "comittees",
-      dropdown: [
-        {
-          name: "Add New Committee",
-          link: "/add-committee",
-        },
-      ],
-    },
+    // {
+    //   name: "Comittees",
+    //   icon: TbUsersGroup ,
+    //   link: "comittees",
+    //   dropdown: [
+    //     {
+    //       name: "Add New Committee",
+    //       link: "/add-committee",
+    //     },
+    //   ],
+    // },
   ];

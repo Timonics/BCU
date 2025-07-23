@@ -8,7 +8,7 @@ import { useBandStore } from '../../../stores/bandStore';
 import { useUnitStore } from '../../../stores/unitStore';
 import { useLoadingStore } from '../../../stores/loadingStore';
 import Loading from '../../../components/loading';
-import { baptismalStatus } from '../../../utils/listings';
+import { baptismalStatus } from '../../../constants/listings';
 import { useMembershipStore } from '../../../stores/membershipStore';
 
 const ChurchInfo: React.FC = () => {

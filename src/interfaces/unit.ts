@@ -9,12 +9,24 @@ export interface UnitState {
   setSelectedUnitId: (value: number) => void;
   totalUnits: number;
   setTotalUnits: (value: number) => void;
+  unitMetadata: Partial<UnitMetadata> | null;
+  setUnitMetadata: (value: Partial<UnitMetadata>) => void;
 }
 
 export interface AddUnit {
   name: string;
   foundingDate: string;
-  unitHeadId: number;
+  unitHeadId?: number;
+}
+
+export interface UnitMetadata {
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+  totalUnits: number;
+  totalUnitLeaders: number;
+  hasPrev: boolean;
+  hasNext: boolean;
 }
 
 export interface UnitDetails {
@@ -28,7 +40,12 @@ export interface UnitDetails {
 export interface UnitsResponse {
   statusCode: number;
   message: string;
-  data: UnitDetails[];
+  data:
+    | {
+        units: UnitDetails[];
+        meta: UnitMetadata;
+      }
+    | string;
   timestamp: string;
 }
 

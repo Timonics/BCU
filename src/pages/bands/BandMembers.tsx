@@ -7,26 +7,26 @@ export default function BandMembers() {
   const { selectedBand } = useBandStore();
   const { isLoading } = useLoadingStore();
 
-  const memberElements = selectedBand ? (
+  const memberElements = selectedBand?.members?.length ? (
     selectedBand.members?.map((member) => (
-      <div className="grid grid-cols-9 p-2 py-4">
-        <p className="text-black/90 text-[10px] font-bold pops">{member.id}</p>
-        <p className="text-black/90 col-span-2 text-[10px] font-bold pops">
+      <div className="grid grid-cols-9 p-4">
+        <p className="text-black/90 text-[12px] font-medium pops">{member.id}</p>
+        <p className="text-black/90 col-span-2 text-[12px] font-medium pops">
           {member.firstName} {member.lastName}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">
+        <p className="text-black/90 text-[12px] font-medium pops">
           {member.gender}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">
+        <p className="text-black/90 text-[12px] font-medium pops">
           {member.phoneNumber}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">
+        <p className="text-black/90 text-[12px] font-medium pops">
           {member.dateOfBirth}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">
-          {member.status}
+        <p className="text-black/90 text-[12px] font-medium pops">
+          {member.maritalStatus}
         </p>
-        <p className="text-black/90 text-[10px] font-bold pops">
+        <p className="text-black/90 text-[12px] font-medium pops">
           {member.country}
         </p>
         <div className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">

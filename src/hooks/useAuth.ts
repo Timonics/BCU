@@ -7,9 +7,10 @@ import {
 import { useLoadingStore } from '../stores/loadingStore';
 import { toast } from 'react-toastify';
 import { useAuthStore } from '../stores/authStore';
+import { url } from '../utils/db_url';
 
 export const useAuth = () => {
-  const dbUrl = 'https://bcu-backend-ckde.onrender.com/auth/';
+  const dbUrl = `${url}auth/`;
   const { setIsAuthenticated, setToken } = useAuthStore();
   const { setIsLoading } = useLoadingStore();
 

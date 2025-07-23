@@ -11,6 +11,8 @@ export interface MembershipState {
   setSelectedUnit: (value: string) => void;
   selectedBaptismalStatus: string | null;
   setSelectedBaptismalStatus: (value: string) => void;
+  memberMetadata: Partial<MemberMetadata> | null;
+  setMemberMetadata: (value: Partial<MemberMetadata>) => void;
 }
 
 export interface Member {
@@ -67,16 +69,25 @@ export interface MemberDetails {
   leadershipPosition: LeadershipPosition | null;
 }
 
+export interface MemberMetadata {
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+  totalMembers: number;
+  totalMaleMembers: number;
+  totalFemaleMembers: number;
+  hasPrev: boolean;
+  hasNext: boolean;
+}
+
 export interface MemberResponse {
   statusCode: number;
   message: string;
-  data: {
-    members: MemberDetails[];
-    meta: {
-      totalMembers: number;
-      totalMaleMembers: number;
-      totalFemaleMembers: number;
-    };
-  };
+  data:
+    | {
+        members: MemberDetails[];
+        meta: MemberMetadata;
+      }
+    | string;
   timestamp: string;
 }
