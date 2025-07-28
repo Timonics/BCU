@@ -1,19 +1,24 @@
 import axios from 'axios';
 import {
   AddBandDetails,
+  BandMembersResponse,
   BandResponse,
   BandsResponse,
 } from '../interfaces/bands';
 import { useBandStore } from '../stores/bandStore';
 import { useLoadingStore } from '../stores/loadingStore';
-import { toast } from 'react-toastify';
 import { useAuthStore } from '../stores/authStore';
 import { url } from '../utils/db_url';
+import { useNavigate } from 'react-router';
+import useStates from './useStates';
+import { showError, showSuccess } from '../utils/toast';
 
 export const useBand = () => {
   const dbUrl = `${url}bands/`;
+  const navigate = useNavigate();
   const { token } = useAuthStore();
   const { setBands, setSelectedBand, setBandMetadata } = useBandStore();
+  const { setIsCreateNewBandOpen } = useStates();
   const { setIsLoading } = useLoadingStore();
 
   const addBand = async (bandDetails: AddBandDetails) => {
@@ -24,11 +29,12 @@ export const useBand = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      toast.success('Band added successfully');
-      window.location.reload();
+      showSuccess('Band added successfully');
+      setIsCreateNewBandOpen(false);
+      navigate('/bands', { state: { shouldRefresh: true } });
     } catch (err) {
       console.error('Error: ', err);
-      toast.error('Error adding band');
+      showError('Error adding band');
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +67,7 @@ export const useBand = () => {
         typeof bandResponse.data === 'object' ? bandResponse.data.meta : {},
       );
     } catch (err: any) {
-      toast.error(err.message);
+      showError(err.message);
       console.error('Error: ', err);
     } finally {
       setIsLoading(false);
@@ -80,12 +86,63 @@ export const useBand = () => {
       setSelectedBand(bandResponse.data);
     } catch (err: any) {
       setIsLoading(false);
-      toast.error(err.message);
+      showError(err.message);
       console.error('Error: ', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { getAllBands, getBand, addBand };
+  const fetchBandMembersWithoutCaptain = async (bandId: number) => {
+    try {
+      const response = await axios.get(
+        `${dbUrl}band-members/${bandId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const membersResponse = response.data as BandMembersResponse;
+
+      return membersResponse.data;
+    } catch (err: any) {
+      setIsLoading(false);
+      showError(
+        err.response
+          ? err.response.data.message
+          : 'Error fetching band members',
+      );
+      console.error('Error: ', err);
+    }
+  };
+
+  const updateBand = async (
+    bandId: number,
+    bandData: Partial<AddBandDetails>,
+  ) => {
+    try {
+      await axios.put(`${dbUrl}update-band/${bandId}`, bandData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      showSuccess('Successfully updated band');
+      navigate(location.pathname, { state: { shouldRefresh: true } });
+    } catch (err: any) {
+      showError(
+        err.response.data ? err.response.data.message : 'Internal Server Error',
+      );
+      console.error('Error: ', err);
+    }
+  };
+
+  return {
+    getAllBands,
+    getBand,
+    addBand,
+    fetchBandMembersWithoutCaptain,
+    updateBand,
+  };
 };

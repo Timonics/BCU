@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
-import { genders } from '../../../constants/listings';
+import { genders, marital_status } from '../../../constants/listings';
 import { useLocation } from 'react-router';
 import useStates from '../../../hooks/useStates';
 
@@ -8,6 +8,8 @@ const PersonalInfo: React.FC = () => {
   const location = useLocation();
   const pathName = location.pathname.split('/').at(-1);
   const [genderIsOpen, setGenderIsOpen] = useState<boolean>(false);
+  const [maritalStatusIsOpen, setMaritalStatusIsOpen] =
+    useState<boolean>(false);
   const { addMemberDetails, setAddMembersDetails } = useStates();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +25,10 @@ const PersonalInfo: React.FC = () => {
       className={`grid ${
         pathName === 'summary' ? 'grid-cols-3' : 'grid-cols-2'
       } gap-4 px-2`}
+      onClick={() => {
+        genderIsOpen && setGenderIsOpen(false);
+        maritalStatusIsOpen && setMaritalStatusIsOpen(false);
+      }}
     >
       <div className="flex flex-col gap-2">
         <p className="text-sm">
@@ -83,7 +89,10 @@ const PersonalInfo: React.FC = () => {
         </p>
         <div
           className="member-input pl-2 font-medium text-[#101828]/65 focus:outline-1 focus:outline-[#009bf4b6] rounded-lg border-[1.5px] border-[#D0D5DD] flex items-center px-2 relative cursor-pointer"
-          onClick={() => setGenderIsOpen(!genderIsOpen)}
+          onClick={() => {
+            setGenderIsOpen(!genderIsOpen);
+            setMaritalStatusIsOpen(false);
+          }}
         >
           <p className="tfont-medium text-[#101828]/65">
             {addMemberDetails.gender
@@ -93,9 +102,10 @@ const PersonalInfo: React.FC = () => {
           </p>
           <MdKeyboardArrowDown className="absolute right-2" />
           {genderIsOpen && (
-            <ul className="absolute top-[50px] left-0 w-full bg-white border-[1.5px] border-[#D0D5DD] rounded-lg shadow-xl">
+            <ul className="absolute top-[50px] left-0 w-full z-20 bg-white border-[1.5px] border-[#D0D5DD] rounded-lg shadow-xl">
               {genders.map((gender, index) => (
                 <li
+                  key={gender.name}
                   className={`p-2 text-[13px] text-[#404040] cursor-pointer ${
                     index !== 1 && 'border-b border-[#97979786]'
                   }`}
@@ -128,12 +138,41 @@ const PersonalInfo: React.FC = () => {
         <p className="text-sm">
           Marital Status <span className="text-red-600">*</span>
         </p>
-        <input
-          className="member-input pl-2 font-medium text-[#101828]/65 focus:outline-1 focus:outline-[#009bf4b6]"
-          name="maritalStatus"
-          value={addMemberDetails?.maritalStatus}
-          onChange={handleChange}
-        />
+        <div
+          className="member-input pl-2 font-medium text-[#101828]/65 focus:outline-1 focus:outline-[#009bf4b6] rounded-lg border-[1.5px] border-[#D0D5DD] flex items-center px-2 relative cursor-pointer"
+          onClick={() => {
+            setMaritalStatusIsOpen(!maritalStatusIsOpen);
+            setGenderIsOpen(false);
+          }}
+        >
+          <p className="tfont-medium text-[#101828]/65">
+            {addMemberDetails.maritalStatus
+              ? addMemberDetails.maritalStatus.charAt(0).toUpperCase() +
+                addMemberDetails.maritalStatus.slice(1)
+              : '--select marital status--'}
+          </p>
+          <MdKeyboardArrowDown className="absolute right-2" />
+          {maritalStatusIsOpen && (
+            <ul className="absolute top-[50px] left-0 w-full bg-white border-[1.5px] border-[#D0D5DD] rounded-lg shadow-xl">
+              {marital_status.map((status, index) => (
+                <li
+                  key={status.name}
+                  className={`p-2 text-[13px] text-[#404040] cursor-pointer ${
+                    index !== 1 && 'border-b border-[#97979786]'
+                  }`}
+                  onClick={() => {
+                    setAddMembersDetails((prevState) => ({
+                      ...prevState,
+                      maritalStatus: status.name.toLowerCase(),
+                    }));
+                  }}
+                >
+                  {status.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         <p className="text-sm">

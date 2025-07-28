@@ -7,13 +7,18 @@ import CreateNewUnit from './CreateNewUnit';
 import UnitInfo from './UnitInfo';
 import AllUnitMembers from './AllUnitMembers';
 import { useUnitStore } from '../../stores/unitStore';
-import Loading from '../../components/loading';
+import Loading from '../../components/loader';
 import UnitMembers from './UnitMembers';
 import { useLoadingStore } from '../../stores/loadingStore';
 import { useUnit } from '../../hooks/useUnit';
+import UpdateUnit from './update-unit';
+import UpdateMember from '../members/update-member';
+import ViewMember from '../members/view-member';
+import UpdateUnitLeadership from './update-unit/UpdateUnitLeadership';
+import TransferUnitMember from './update-unit/TransferUnitMember';
 
 const Units: React.FC = () => {
-  const { isLoading } = useLoadingStore();
+  const { isLoading, setIsLoading } = useLoadingStore();
   const {
     units,
     selectedUnitId,
@@ -23,14 +28,30 @@ const Units: React.FC = () => {
   } = useUnitStore();
   const { getAllUnits } = useUnit();
   const location = useLocation();
-  const { isCreateNewUnitOpen, setIsCreateNewUnitOpen } = useStates();
+  const {
+    isCreateNewUnitOpen,
+    setIsCreateNewUnitOpen,
+    updateUnitIsOpen,
+    setUpdateUnitIsOpen,
+    updateUnitLeadershipIsOpen,
+    setUpdateUnitLeadershipIsOpen,
+    updateUnitMemberIsOpen,
+    setUpdateUnitMemberIsOpen,
+    viewUnitMemberIsOpen,
+    setViewUnitMemberIsOpen,
+    selectedMember,
+  } = useStates();
   const [activeUnitName, setActiveUnitName] = useState('');
+
+  const [transferUnitMemberIsOpen, setTransferUnitMemberIsOpen] =
+    useState(false);
 
   const queryPathId = location.search.split('?').at(-1);
 
   useEffect(() => {
+    if (location.state?.shouldRefresh) setIsLoading(true);
     getAllUnits();
-  }, []);
+  }, [location.state?.shouldRefresh]);
 
   const unitsElements = units.map((unit) => {
     return (
@@ -41,9 +62,10 @@ const Units: React.FC = () => {
           setActiveUnitName(unit.name);
           setSelectedUnitId(unit.id);
         }}
-        className={`text-[13px] text-[#344054] font-semibold ${
-          unit.id === Number(queryPathId) &&
-          'bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105'
+        className={`text-[13px]  rounded-md text-[#344054] font-semibold ${
+          unit.id === Number(queryPathId)
+            ? 'bg-[#009AF4]/30 hover:bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-150 scale-105'
+            : 'hover:scale-90 hover:ease-in-out duration-150'
         }`}
       >
         {unit.name}
@@ -85,9 +107,10 @@ const Units: React.FC = () => {
               <>
                 <Link
                   to={''}
-                  className={`text-[13px] text-[#344054] font-semibold ${
-                    (!location.search || activeUnitName == 'All Units') &&
-                    'bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105'
+                  className={`text-[13px] rounded-md text-[#344054] font-semibold ${
+                    !location.search || activeUnitName == 'All Units'
+                      ? 'bg-[#009AF4]/30 text-[#009AF4] p-3 transition ease-in-out duration-150 scale-105'
+                      : 'hover:scale-90 hover:ease-in-out duration-150'
                   }`}
                 >
                   All Units
@@ -117,7 +140,11 @@ const Units: React.FC = () => {
               <p className="text-lg font-bold flex gap-3 items-center">
                 Members Listing ({selectedUnit?.members?.length || 0})
               </p>
-              <Button Icon={IoAddCircleOutline} text="Transfer Member" />
+              <Button
+                Icon={IoAddCircleOutline}
+                text="Transfer Member"
+                onClick={() => setTransferUnitMemberIsOpen(true)}
+              />
             </div>
             <div className="">
               <div className="grid grid-cols-9 p-4 border-b-[1.5px] border-black/30 bg-black/5">
@@ -137,8 +164,12 @@ const Units: React.FC = () => {
                 <p className="text-black/90 text-[13px] font-bold pops">
                   Birthday
                 </p>
-                <p className="text-black/90 text-[13px] font-bold pops">Marital Status</p>
-                <p className="text-black/90 text-[13px] font-bold pops">Location</p>
+                <p className="text-black/90 text-[13px] font-bold pops">
+                  Marital Status
+                </p>
+                <p className="text-black/90 text-[13px] font-bold pops">
+                  Location
+                </p>
                 <p className="text-black/90 text-[13px] font-bold pops">
                   Action
                 </p>
@@ -156,6 +187,66 @@ const Units: React.FC = () => {
           />
           <CreateNewUnit />
         </>
+      )}
+      {updateUnitIsOpen && (
+        <div className="fixed top-[64px] right-0 w-[80%] h-[calc(100vh-64px)]">
+          <div
+            className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+            onClick={() => setUpdateUnitIsOpen(false)}
+          />
+          <UpdateUnit
+            unit={selectedUnit!}
+            setUpdateUnitIsOpen={setUpdateUnitIsOpen}
+          />
+        </div>
+      )}
+      {updateUnitLeadershipIsOpen && (
+        <div className="fixed top-[64px] right-0 w-[80%] h-[calc(100vh-64px)]">
+          <div
+            onClick={() => setUpdateUnitLeadershipIsOpen(false)}
+            className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+          />
+          <UpdateUnitLeadership
+            unit={selectedUnit!}
+            setUpdateUnitLeadershipIsOpen={setUpdateUnitLeadershipIsOpen}
+          />
+        </div>
+      )}
+      {updateUnitMemberIsOpen && (
+        <div className="fixed top-[64px] right-0 w-[80%] h-[calc(100vh-64px)]">
+          <div
+            onClick={() => setUpdateUnitMemberIsOpen(false)}
+            className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+          />
+          <UpdateMember
+            member={selectedMember}
+            setUpdateMemberIsOpen={setUpdateUnitMemberIsOpen}
+          />
+        </div>
+      )}
+      {viewUnitMemberIsOpen && (
+        <div className="fixed top-[64px] right-0 w-[80%] h-[calc(100vh-64px)]">
+          <div
+            onClick={() => setViewUnitMemberIsOpen(false)}
+            className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+          />
+          <ViewMember
+            member={selectedMember!}
+            setViewMemberIsOpen={setViewUnitMemberIsOpen}
+          />
+        </div>
+      )}
+      {transferUnitMemberIsOpen && (
+        <div className="fixed top-[64px] right-0 w-[80%] h-[calc(100vh-64px)]">
+          <div
+            onClick={() => setTransferUnitMemberIsOpen(false)}
+            className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+          />
+          <TransferUnitMember
+            unit={selectedUnit!}
+            setTransferUnitMemberIsOpen={setTransferUnitMemberIsOpen}
+          />
+        </div>
       )}
     </section>
   );

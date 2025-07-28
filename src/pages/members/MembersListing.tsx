@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
 import { LuCloudDownload } from 'react-icons/lu';
-import { TbEdit, TbEye, TbPlus, TbTrash, TbUser } from 'react-icons/tb';
+import { TbPlus, TbUser } from 'react-icons/tb';
 import { viewOptions } from '../../constants/viewOptions';
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useMembership } from '../../hooks/useMembership';
 import { useMembershipStore } from '../../stores/membershipStore';
-import Loading from '../../components/loading';
+import Loading from '../../components/loader';
 import { useLoadingStore } from '../../stores/loadingStore';
 import { colorCode } from '../../utils/colorCode';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import Pagination from '../../components/pagination';
+import useStates from '../../hooks/useStates';
+import UpdateMember from './update-member';
+import Action from '../../components/action';
+import ViewMember from './view-member';
 
 interface MemberProps {
   gender: string | null;
@@ -43,9 +47,18 @@ const MembersListing = ({
   setUnitIsOpen,
   setClassIsOpen,
 }: MemberProps) => {
-  const { isLoading, setIsLoading } = useLoadingStore();
+  const navigate = useNavigate();
   const location = useLocation();
   const { getAllMembers } = useMembership();
+  const {
+    setUpdateMemberIsOpen,
+    setSelectedMember,
+    updateMemberIsOpen,
+    selectedMember,
+    viewMemberIsOpen,
+    setViewMemberIsOpen,
+  } = useStates();
+  const { isLoading, setIsLoading } = useLoadingStore();
   const { members, memberMetadata } = useMembershipStore();
   let memberPageIsActive: boolean = false;
   if (location.pathname === '/members') memberPageIsActive = true;
@@ -58,7 +71,6 @@ const MembersListing = ({
   const [numberOfEntriesSelected, setNumberOfEntriesSelected] =
     useState<string>('');
   const [sortValueSelected, setSortValueSelected] = useState<string>('');
-
   const [sortOrder, setSortOrder] = useState<string>('');
   const [sortValue, setSortValue] = useState<string>('');
   const [entriesValue, setEntriesValue] = useState<number>(10);
@@ -66,6 +78,8 @@ const MembersListing = ({
   useEffect(() => {
     if (location.state?.shouldRefresh) setIsLoading(true);
     getAllMembers();
+
+    navigate(location.pathname, { state: { shouldRefresh: false } });
   }, [location.state?.shouldRefresh]);
 
   const viewOptionsElement = viewOptions.map((option, index) => (
@@ -148,18 +162,16 @@ const MembersListing = ({
           >
             {member.status.split('')[0].toUpperCase() + member.status.slice(1)}
           </p>
-          <div className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
-            <button className="hover:bg-gray-200 p-1.5 rounded-full cursor-pointer transition ease-in-out duration-300 hover:text-blue-500 text-gray-600">
-              <TbEdit size={20} />
-            </button>
-            <hr />
-            <div className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-purple-800 text-gray-600">
-              <TbEye size={20} />
-            </div>
-            <button className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-red-500 text-gray-600">
-              <TbTrash size={20} />
-            </button>
-          </div>
+          <Action
+            onEdit={() => {
+              setUpdateMemberIsOpen(true);
+              setSelectedMember(member);
+            }}
+            onView={() => {
+              setViewMemberIsOpen(true);
+              setSelectedMember(member);
+            }}
+          />
         </div>
       );
     })
@@ -371,6 +383,30 @@ const MembersListing = ({
           }
         />
       </div>
+      {updateMemberIsOpen && (
+        <>
+          <div
+            onClick={() => setUpdateMemberIsOpen(false)}
+            className="fixed top-0 right-0 w-full backdrop-blur-sm h-full"
+          />
+          <UpdateMember
+            member={selectedMember}
+            setUpdateMemberIsOpen={setUpdateMemberIsOpen}
+          />
+        </>
+      )}
+      {viewMemberIsOpen && (
+        <>
+          <div
+            onClick={() => setViewMemberIsOpen(false)}
+            className="fixed top-0 right-0 w-full backdrop-blur-sm h-full"
+          />
+          <ViewMember
+            member={selectedMember!}
+            setViewMemberIsOpen={setViewMemberIsOpen}
+          />
+        </>
+      )}
     </div>
   );
 };

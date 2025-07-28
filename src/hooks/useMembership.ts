@@ -3,12 +3,13 @@ import { useAuthStore } from '../stores/authStore';
 import { MemberDetails, MemberResponse } from '../interfaces/member';
 import { useMembershipStore } from '../stores/membershipStore';
 import { useLoadingStore } from '../stores/loadingStore';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { url } from '../utils/db_url';
+import { showError, showSuccess } from '../utils/toast';
 
 export const useMembership = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { token } = useAuthStore();
   const { setIsLoading, setMemberLoading } = useLoadingStore();
   const { setMembers, setMemberMetadata } = useMembershipStore();
@@ -35,7 +36,7 @@ export const useMembership = () => {
       });
 
       const membershipResponse = response.data as MemberResponse;
-      
+
       setMembers(
         typeof membershipResponse.data === 'object'
           ? membershipResponse.data.members
@@ -48,7 +49,9 @@ export const useMembership = () => {
       );
       setIsLoading(false);
     } catch (err: any) {
-      toast.error(err.message ? err.message : 'Error fetching members');
+      showError(
+        err.response ? err.response.data.message : 'Error fetching members',
+      );
       console.error('Error: ', err);
     } finally {
       setIsLoading(false);
@@ -57,7 +60,7 @@ export const useMembership = () => {
 
   const getMember = async (memberId: number) => {
     try {
-      const response = await axios.get(`${dbUrl}/${memberId}`, {
+      const response = await axios.get(`${dbUrl}${memberId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -65,7 +68,7 @@ export const useMembership = () => {
       const memberResponse = response.data;
       console.log(memberResponse);
     } catch (err) {
-      toast.error('Error fetching member');
+      showError('Error fetching member');
       console.error('Error: ', err);
     } finally {
       setIsLoading(false);
@@ -75,16 +78,16 @@ export const useMembership = () => {
   const addMember = async (memberData: Partial<MemberDetails>) => {
     setMemberLoading(true);
     try {
-      await axios.post(`${dbUrl}/add-member`, memberData, {
+      await axios.post(`${dbUrl}add-member`, memberData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      toast.success('Successfully added member');
-      navigate('/members', { state: { shouldRefresh: true } });
+      showSuccess('Successfully added member');
+      navigate(`${location.pathname}`, { state: { shouldRefresh: true } });
     } catch (err: any) {
-      toast.error(
+      showError(
         err.response.data ? err.response.data.message : 'Internal Server Error',
       );
       console.error('Error: ', err);
@@ -93,5 +96,28 @@ export const useMembership = () => {
     }
   };
 
-  return { getAllMembers, getMember, addMember };
+  const updateMember = async (
+    memberId: number,
+    memberData: Partial<MemberDetails>,
+  ) => {
+    try {
+      await axios.put(`${dbUrl}update-member/${memberId}`, memberData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      showSuccess('Successfully updated member');
+      navigate(`${location.pathname}?${location.search}`, {
+        state: { shouldRefresh: true },
+      });
+    } catch (err: any) {
+      showError(
+        err.response.data ? err.response.data.message : 'Internal Server Error',
+      );
+      console.error('Error: ', err);
+    }
+  };
+
+  return { getAllMembers, getMember, addMember, updateMember };
 };

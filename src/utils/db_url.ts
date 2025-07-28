@@ -1,4 +1,4 @@
-const isProduction: boolean = true;
+const isProduction: boolean = false;
 
 export const url = isProduction
   ? 'https://bcu-backend-ckde.onrender.com/'

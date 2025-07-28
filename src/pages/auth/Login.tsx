@@ -1,13 +1,13 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import { Link } from "react-router";
-import { AdminSignInData } from "../../interfaces/auth";
-import { useAuth } from "../../hooks/useAuth";
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { Link } from 'react-router';
+import { AdminSignInData } from '../../interfaces/auth';
+import { useAuth } from '../../hooks/useAuth';
 
 const Login: React.FC = () => {
   const { adminSignin } = useAuth();
   const [loginData, setLoginData] = useState<AdminSignInData>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
               className="outline-none focus:border-[#009AF4] p-2 w-full rounded-lg border-[1.33px] border-black/30"
             />
             <Link
-              to={"forgot-password"}
+              to={'forgot-password'}
               className="text-end font-bold text-[#009AF4] text-[13px] cursor-pointer"
             >
               Forgot password?
@@ -70,8 +70,9 @@ const Login: React.FC = () => {
             </label>
           </div>
           <button
+            disabled={!loginData.email || !loginData.password}
             type="submit"
-            className="pops font-bold text-slate-100 bg-[#009AF4] w-full p-3 mb-4 rounded-lg cursor-pointer"
+            className="pops disabled:opacity-50 font-bold text-slate-100 bg-[#009AF4] w-full p-3 mb-4 rounded-lg cursor-pointer"
           >
             Log in
           </button>

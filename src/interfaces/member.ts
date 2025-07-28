@@ -13,6 +13,8 @@ export interface MembershipState {
   setSelectedBaptismalStatus: (value: string) => void;
   memberMetadata: Partial<MemberMetadata> | null;
   setMemberMetadata: (value: Partial<MemberMetadata>) => void;
+  selectedMember: MemberDetails | null;
+  setSelectedMember: (value: MemberDetails) => void;
 }
 
 export interface Member {

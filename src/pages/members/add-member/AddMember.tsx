@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from '../../../assets/dashLogo.png';
 import { Link, NavLink, Outlet, useLocation } from 'react-router';
-import { addMemberSteps } from '../../../constants/addMemberSteps';
+import { addMemberSteps } from '../../../constants/member_management_steps';
 import { useLoadingStore } from '../../../stores/loadingStore';
-import Loading from '../../../components/loading';
+import Loading from '../../../components/loader';
+import Logo from '../../../components/logo';
 
 const AddMember: React.FC = () => {
   const location = useLocation();
@@ -32,10 +32,13 @@ const AddMember: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-0 left-0 h-full w-full backdrop-blur-sm" />
+      <Link
+        className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+        to={'..'}
+      />
       <div className="absolute top-1/2 -translate-y-1/2 right-1/2 translate-x-1/2 flex w-[70%] h-[85%] shadow-xl">
         <div className="w-2/6 bg-[#d8e9f5] flex flex-col items-center gap-5 pt-4">
-          <img src={logo} alt="yfg-logo" className="w-[123px] h-[115px]" />
+        <Logo />
           <p className="text-xs text-center font-bold pops">
             Youth Fellowship Membership Data Form
           </p>
@@ -46,7 +49,7 @@ const AddMember: React.FC = () => {
         <div className="w-4/6 bg-white flex flex-col overflow-y-auto p-4 gap-4">
           <Link
             to={'..'}
-            className="px-3 py-1.5 pops text-sm rounded-lg bg-[#009AF4] text-white font-semibold ml-auto"
+            className="px-3 py-1.5 pops text-sm rounded-lg bg-[#009AF4] hover:bg-[#0086f4] cursor-pointer text-white font-semibold ml-auto"
           >
             Back
           </Link>

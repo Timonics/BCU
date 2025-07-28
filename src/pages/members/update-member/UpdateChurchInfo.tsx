@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useLocation } from 'react-router';
 import useStates from '../../../hooks/useStates';
@@ -10,10 +10,12 @@ import { useLoadingStore } from '../../../stores/loadingStore';
 import Loading from '../../../components/loader';
 import { baptismalStatus } from '../../../constants/listings';
 import { useMembershipStore } from '../../../stores/membershipStore';
+import { MemberDetails } from '../../../interfaces/member';
 
-const ChurchInfo: React.FC = () => {
+const UpdateChurchInfo = ({ member }: { member: MemberDetails }) => {
   const location = useLocation();
   const pathName = location.pathname.split('/').at(-1);
+  const { updateMemberDetails, setUpdateMembersDetails } = useStates();
 
   const { isLoading } = useLoadingStore();
   const {
@@ -25,7 +27,6 @@ const ChurchInfo: React.FC = () => {
     setSelectedBaptismalStatus,
   } = useMembershipStore();
 
-  const { addMemberDetails, setAddMembersDetails } = useStates();
   const { getAllBands } = useBand();
   const { getAllUnits } = useUnit();
   const { bands } = useBandStore();
@@ -36,9 +37,18 @@ const ChurchInfo: React.FC = () => {
   const [baptismalStatusIsOpen, setBaptismalStatusIsOpen] =
     useState<boolean>(false);
 
+  const [baptismalLocationIsActive, setBaptismalLocationIsActive] =
+    useState<boolean>(false);
+  const [nextOfKinFullNameIsActive, setNextOfKinFullNameIsActive] =
+    useState<boolean>(false);
+  const [nextOfKinRelationshipIsActive, setNextOfKinRelationshipIsActive] =
+    useState<boolean>(false);
+  const [nextOfKinPhoneNumberIsActive, setNextOfKinPhoneNumberIsActive] =
+    useState<boolean>(false);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setAddMembersDetails((prevState) => ({
+    setUpdateMembersDetails((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -53,6 +63,9 @@ const ChurchInfo: React.FC = () => {
     <div
       className={`grid ${pathName === 'summary' ? 'grid-cols-3' : 'grid-cols-2'} gap-4 px-2`}
     >
+      <p className="mt-4 col-span-full font-semibold text-lg">
+        Church Information
+      </p>
       <div className="flex flex-col gap-2">
         <p className="text-sm">
           Present Band <span className="text-red-600">*</span>
@@ -66,7 +79,9 @@ const ChurchInfo: React.FC = () => {
           }}
         >
           <p className="font-medium text-[#101828]/65">
-            {selectedBand ? selectedBand : '--Select Band--'}
+            {selectedBand
+              ? selectedBand
+              : `${member.band?.name ? `${member.band.name.charAt(0).toUpperCase() + member.band.name.slice(1)} - select band to change -` : 'Select member band'}`}
           </p>
           <MdKeyboardArrowDown className="absolute right-2" />
           {bandIsOpen && (
@@ -80,7 +95,7 @@ const ChurchInfo: React.FC = () => {
                     }`}
                     onClick={() => {
                       setSelectedBand(band.name);
-                      setAddMembersDetails((prevState) => ({
+                      setUpdateMembersDetails((prevState) => ({
                         ...prevState,
                         bandId: band.id,
                       }));
@@ -101,7 +116,7 @@ const ChurchInfo: React.FC = () => {
       </div>
       <div className="flex flex-col gap-2">
         <p className="text-sm">
-          Unit(s) <span className="text-red-600">*</span>
+          Unit <span className="text-red-600">*</span>
         </p>
         <div
           className="member-input rounded-lg border-[1.5px] border-[#D0D5DD] flex items-center px-2 relative cursor-pointer"
@@ -112,7 +127,9 @@ const ChurchInfo: React.FC = () => {
           }}
         >
           <p className="font-medium text-[#101828]/65">
-            {selectedUnit ? selectedUnit : '--Select Unit(s)--'}
+            {selectedUnit
+              ? selectedUnit
+              : `${member.unit?.name ? `${member.unit.name.charAt(0).toUpperCase() + member.unit.name.slice(1)} - select band to change -` : 'Select member unit'}`}
           </p>
           <MdKeyboardArrowDown className="absolute right-2" />
           {unitIsOpen && (
@@ -126,7 +143,7 @@ const ChurchInfo: React.FC = () => {
                     }`}
                     onClick={() => {
                       setSelectedUnit(unit.name);
-                      setAddMembersDetails((prevState) => ({
+                      setUpdateMembersDetails((prevState) => ({
                         ...prevState,
                         unitId: unit.id,
                       }));
@@ -160,7 +177,7 @@ const ChurchInfo: React.FC = () => {
           <p className="font-medium text-[#101828]/65">
             {selectedBaptismalStatus
               ? selectedBaptismalStatus
-              : '--Select Baptimal Status--'}
+              : `${baptismalStatus ? 'Already Baptised --Select updated baptimal status--' : 'Not yet Baptised --Select updated baptimal status--'}`}
           </p>
           <MdKeyboardArrowDown className="absolute right-2" />
           {baptismalStatusIsOpen && (
@@ -172,7 +189,7 @@ const ChurchInfo: React.FC = () => {
                   }`}
                   onClick={() => {
                     setSelectedBaptismalStatus(status);
-                    setAddMembersDetails((prevState) => ({
+                    setUpdateMembersDetails((prevState) => ({
                       ...prevState,
                       baptismalStatus:
                         status === 'Already Baptised' ? true : false,
@@ -190,52 +207,96 @@ const ChurchInfo: React.FC = () => {
         <p className="text-sm">
           Baptimal Location/Church <span className="text-red-600">*</span>
         </p>
-        <input
-          type="text"
-          className="member-input font-medium text-[#101828]/65 rounded-lg border-[1.5px] border-[#D0D5DD] focus:outline-1 focus:outline-[#009bf4b6] flex items-center px-2 relative"
-          name="locationOfBaptism"
-          value={addMemberDetails.locationOfBaptism}
-          onChange={handleChange}
-        />
+        <div
+          className="member-input cursor-pointer font-medium text-[#101828]/65 relative"
+          onClick={() => setBaptismalLocationIsActive(true)}
+        >
+          <p
+            className={`absolute w-full h-full bg-white rounded-md flex ${baptismalLocationIsActive ? 'z-0' : 'z-10'} items-center pl-2`}
+          >
+            {member.locationOfBaptism}
+          </p>
+          <input
+            type="text"
+            placeholder={`${member.locationOfBaptism} - Enter updated baptismal location to change`}
+            className={`absolute focus:outline-1 pl-2 w-full h-full ${baptismalLocationIsActive ? 'z-20' : 'z-0'} bg-white rounded-md outline-[#009bf4b6]`}
+            name="locationOfBaptism"
+            value={updateMemberDetails.locationOfBaptism}
+            onChange={handleChange}
+          />
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         <p className="text-sm">
           Next of Kin Full name(s) <span className="text-red-600">*</span>
         </p>
-        <input
-          type="text"
-          className="member-input font-medium text-[#101828]/65 rounded-lg border-[1.5px] border-[#D0D5DD] focus:outline-1 focus:outline-[#009bf4b6] flex items-center px-2 relative"
-          name="nextOfKinFullName"
-          value={addMemberDetails?.nextOfKinFullName}
-          onChange={handleChange}
-        />
+        <div
+          className="member-input cursor-pointer font-medium text-[#101828]/65 relative"
+          onClick={() => setNextOfKinFullNameIsActive(true)}
+        >
+          <p
+            className={`absolute w-full h-full bg-white rounded-md flex ${nextOfKinFullNameIsActive ? 'z-0' : 'z-10'} items-center pl-2`}
+          >
+            {member.nextOfKinFullName}
+          </p>
+          <input
+            type="text"
+            placeholder={`${member.nextOfKinFullName} - Enter updated next of kin full name to change`}
+            className={`absolute focus:outline-1 pl-2 w-full h-full ${nextOfKinFullNameIsActive ? 'z-20' : 'z-0'} bg-white rounded-md outline-[#009bf4b6]`}
+            name="nextOfKinFullName"
+            value={updateMemberDetails?.nextOfKinFullName}
+            onChange={handleChange}
+          />
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         <p className="text-sm">
           Next of Kin Relationship <span className="text-red-600">*</span>
         </p>
-        <input
-          type="text"
-          className="member-input font-medium text-[#101828]/65 rounded-lg border-[1.5px] border-[#D0D5DD] focus:outline-1 focus:outline-[#009bf4b6] flex items-center px-2 relative"
-          name="nextOfKinRelationship"
-          value={addMemberDetails?.nextOfKinRelationship}
-          onChange={handleChange}
-        />
+        <div
+          className="member-input cursor-pointer font-medium text-[#101828]/65 relative"
+          onClick={() => setNextOfKinRelationshipIsActive(true)}
+        >
+          <p
+            className={`absolute w-full h-full bg-white rounded-md flex ${nextOfKinRelationshipIsActive ? 'z-0' : 'z-10'} items-center pl-2`}
+          >
+            {member.nextOfKinRelationship}
+          </p>
+          <input
+            type="text"
+            placeholder={`${member.nextOfKinRelationship} - Enter updated next of kin relationship to change`}
+            className={`absolute focus:outline-1 pl-2 w-full h-full ${nextOfKinRelationshipIsActive ? 'z-20' : 'z-0'} bg-white rounded-md outline-[#009bf4b6]`}
+            name="nextOfKinRelationship"
+            value={updateMemberDetails?.nextOfKinRelationship}
+            onChange={handleChange}
+          />
+        </div>
       </div>
       <div className="flex flex-col gap-2">
         <p className="text-sm">
           Next of Kin Phone number <span className="text-red-600">*</span>
         </p>
-        <input
-          type="text"
-          className="member-input font-medium text-[#101828]/65 rounded-lg border-[1.5px] border-[#D0D5DD] focus:outline-1 focus:outline-[#009bf4b6] flex items-center px-2 relative"
-          name="nextOfKinPhoneNumber"
-          value={addMemberDetails.nextOfKinPhoneNumber}
-          onChange={handleChange}
-        />
+        <div
+          className="member-input cursor-pointer font-medium text-[#101828]/65 relative"
+          onClick={() => setNextOfKinPhoneNumberIsActive(true)}
+        >
+          <p
+            className={`absolute w-full h-full bg-white rounded-md flex ${nextOfKinPhoneNumberIsActive ? 'z-0' : 'z-10'} items-center pl-2`}
+          >
+            {member.nextOfKinPhoneNumber}
+          </p>
+          <input
+            type="text"
+            placeholder={`${member.nextOfKinPhoneNumber} - Enter updated nextOfKinPhoneNumber to change`}
+            className={`absolute focus:outline-1 pl-2 w-full h-full ${nextOfKinPhoneNumberIsActive ? 'z-20' : 'z-0'} bg-white rounded-md outline-[#009bf4b6]`}
+            name="nextOfKinPhoneNumber"
+            value={updateMemberDetails.nextOfKinPhoneNumber}
+            onChange={handleChange}
+          />
+        </div>
       </div>
     </div>
   );
 };
 
-export default ChurchInfo;
+export default UpdateChurchInfo;

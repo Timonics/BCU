@@ -121,16 +121,6 @@ const Academics: React.FC = () => {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <p className="text-sm">LGA</p>
-        <input
-          type="text"
-          className="member-input font-medium text-[#101828]/65 rounded-lg border-[1.5px] border-[#D0D5DD] focus:outline-1 focus:outline-[#009bf4b6] flex items-center px-2"
-          name="localGovernmentArea"
-          value={addMemberDetails?.localGovernmentArea}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="flex flex-col gap-2">
         <p className="text-sm">Country</p>
         <input
           type="text"

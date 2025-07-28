@@ -7,15 +7,19 @@ import AllBandMembers from './AllBandMembers';
 import useStates from '../../hooks/useStates';
 import CreateNewBand from './CreateNewBand';
 import { useBandStore } from '../../stores/bandStore';
-import Loading from '../../components/loading';
+import Loading from '../../components/loader';
 import BandMembers from './BandMembers';
 import { useLoadingStore } from '../../stores/loadingStore';
 import { useBand } from '../../hooks/useBand';
+import UpdateBand from './update-band';
+import UpdateBandLeadership from './update-band/UpdateBandLeadership';
+import UpdateMember from '../members/update-member';
+import ViewMember from '../members/view-member';
 
 const Bands: React.FC = () => {
-  const { isLoading } = useLoadingStore();
   const location = useLocation();
   const { getAllBands } = useBand();
+  const { isLoading, setIsLoading } = useLoadingStore();
   const {
     bands,
     selectedBandId,
@@ -23,14 +27,27 @@ const Bands: React.FC = () => {
     selectedBand,
     bandMetadata,
   } = useBandStore();
-  const { isCreateNewBandOpen, setIsCreateNewBandOpen } = useStates();
+  const {
+    isCreateNewBandOpen,
+    setIsCreateNewBandOpen,
+    updateBandIsOpen,
+    setUpdateBandIsOpen,
+    updateBandLeadershipIsOpen,
+    setUpdateBandLeadershipIsOpen,
+    updateBandMemberIsOpen,
+    setUpdateBandMemberIsOpen,
+    selectedMember,
+    viewBandMemberIsOpen,
+    setViewBandMemberIsOpen
+  } = useStates();
   const [activeBandName, setActiveBandName] = useState('');
 
   const queryPathId = location.search.split('?').at(-1);
 
   useEffect(() => {
+    if (location.state?.shouldRefresh) setIsLoading(true);
     getAllBands();
-  }, []);
+  }, [location.state?.shouldRefresh]);
 
   const bandsElements = bands.map((band) => {
     return (
@@ -40,9 +57,10 @@ const Bands: React.FC = () => {
           setActiveBandName(band.name);
           setSelectedBandId(band.id);
         }}
-        className={`text-[13px] text-[#344054] font-semibold ${
-          band.id == Number(queryPathId) &&
-          'bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105'
+        className={`text-[13px] text-[#344054] font-semibold rounded-md ${
+          band.id == Number(queryPathId)
+            ? 'bg-[#009AF4]/30 hover:bg-[#009AF4]/30 text-[#009AF4] p-3 transition ease-in-out duration-150 scale-105'
+            : 'hover:scale-90 hover:ease-in-out duration-150'
         }`}
       >
         {band.name}
@@ -60,7 +78,7 @@ const Bands: React.FC = () => {
           </p>
         </div>
         <div className="w-1/4 bg-[#F9FAFB] border-[1.42px] flex flex-col gap-2 border-black/30 p-4 rounded-xl">
-          <p className="text-xs text-black/75">Leaders</p>
+          <p className="text-xs text-black/75">Total Leaders</p>
           <p className="text-black/85 pops font-bold">
             {bandMetadata?.totalBandLeaders ?? 0}
           </p>
@@ -89,9 +107,10 @@ const Bands: React.FC = () => {
                 <Link
                   to={''}
                   onClick={() => setActiveBandName('All Bands')}
-                  className={`text-[13px] text-[#344054] font-semibold ${
-                    (!location.search || activeBandName == 'All Bands') &&
-                    'bg-[#009AF4]/30 text-[#009AF4] p-3 rounded-md transition ease-in-out duration-300 scale-105'
+                  className={`text-[13px] text-[#344054] font-semibold rounded-md ${
+                    !location.search || activeBandName == 'All Bands'
+                      ? 'bg-[#009AF4]/30 text-[#009AF4] p-3 transition ease-in-out duration-150 scale-105'
+                      : 'hover:scale-90 hover:ease-in-out duration-150'
                   }`}
                 >
                   All Bands
@@ -161,6 +180,54 @@ const Bands: React.FC = () => {
           />
           <CreateNewBand />
         </>
+      )}
+      {updateBandIsOpen && (
+        <div className="fixed top-[64px] right-0 w-[80%] h-[calc(100vh-64px)]">
+          <div
+            onClick={() => setUpdateBandIsOpen(false)}
+            className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+          />
+          <UpdateBand
+            band={selectedBand!}
+            setUpdateBandIsOpen={setUpdateBandIsOpen}
+          />
+        </div>
+      )}
+      {updateBandLeadershipIsOpen && (
+        <div className="fixed top-[64px] right-0 w-[80%] h-[calc(100vh-64px)]">
+          <div
+            onClick={() => setUpdateBandLeadershipIsOpen(false)}
+            className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+          />
+          <UpdateBandLeadership
+            band={selectedBand!}
+            setUpdateBandLeadershipIsOpen={setUpdateBandLeadershipIsOpen}
+          />
+        </div>
+      )}
+      {updateBandMemberIsOpen && (
+        <div className="fixed top-[64px] right-0 w-[80%] h-[calc(100vh-64px)]">
+          <div
+            onClick={() => setUpdateBandMemberIsOpen(false)}
+            className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+          />
+          <UpdateMember
+            member={selectedMember}
+            setUpdateMemberIsOpen={setUpdateBandMemberIsOpen}
+          />
+        </div>
+      )}
+      {viewBandMemberIsOpen && (
+        <div className="fixed top-[64px] right-0 w-[80%] h-[calc(100vh-64px)]">
+          <div
+            onClick={() => setViewBandMemberIsOpen(false)}
+            className="absolute top-0 left-0 h-full w-full backdrop-blur-sm"
+          />
+          <ViewMember
+            member={selectedMember!}
+            setViewMemberIsOpen={setViewBandMemberIsOpen}
+          />
+        </div>
       )}
     </section>
   );

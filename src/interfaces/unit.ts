@@ -52,3 +52,7 @@ export interface UnitsResponse {
 export interface UnitResponse extends Omit<UnitsResponse, 'data'> {
   data: UnitDetails;
 }
+
+export interface UnitMembersResponse extends Omit<UnitsResponse, 'data'> {
+  data: MemberDetails[];
+}

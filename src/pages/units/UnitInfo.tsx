@@ -3,8 +3,10 @@ import { TbPencil } from 'react-icons/tb';
 import Button from '../../components/button';
 import { useUnit } from '../../hooks/useUnit';
 import { useUnitStore } from '../../stores/unitStore';
-import Loading from '../../components/loading';
+import Loading from '../../components/loader';
 import { useLoadingStore } from '../../stores/loadingStore';
+import useStates from '../../hooks/useStates';
+import { useLocation, useNavigate } from 'react-router';
 
 type BandProps = {
   unitId?: number | null;
@@ -12,24 +14,19 @@ type BandProps = {
 
 const UnitInfo: React.FC<BandProps> = ({ unitId }) => {
   const { getUnit } = useUnit();
+  const navigate = useNavigate()
+  const location = useLocation();
   const { selectedUnit } = useUnitStore();
-  const { isLoading } = useLoadingStore();
+  const { isLoading, setIsLoading } = useLoadingStore();
+
+  const { setUpdateUnitIsOpen, setUpdateUnitLeadershipIsOpen } = useStates();
 
   useEffect(() => {
+    if (location.state?.shouldRefresh) setIsLoading(true);
     getUnit(unitId!);
-  }, [unitId]);
 
-  // const foundingYear = new Date(selectedUnit?.foundingDate!).getFullYear();
-  // const currentYear = new Date(Date.now()).getFullYear();
-  // const upcomingYear = new Date(Date.now()).getFullYear() + 1;
-  // const numberofYears = selectedUnit?.foundingDate
-  //   ? currentYear - foundingYear
-  //   : 0;
-  // let nextAnniversaryArr =
-  //   selectedUnit && selectedUnit?.foundingDate.split('-');
-  // nextAnniversaryArr !== null
-  //   ? (nextAnniversaryArr[0] = upcomingYear.toString())
-  //   : 'YYYY-MM-DD';
+    navigate(`${location.pathname}?${unitId}`, { state: { shouldRefresh: false } });
+  }, [unitId, location.state?.shouldRefresh]);
 
   const unitsLeadershipElements =
     selectedUnit && selectedUnit.unitHead ? (
@@ -65,14 +62,22 @@ const UnitInfo: React.FC<BandProps> = ({ unitId }) => {
     <div className="flex flex-col gap-4 w-full">
       <div className="flex justify-between items-center p-4 px-6 border rounded-lg border-black/30 bg-[#F9FAFB]">
         <p className="text-2xl font-bold">{selectedUnit?.name}</p>
-        <Button Icon={TbPencil} text="Edit Unit" />
+        <Button
+          Icon={TbPencil}
+          text="Edit Unit"
+          onClick={() => setUpdateUnitIsOpen(true)}
+        />
       </div>
       <div className="border rounded-lg border-black/30 bg-[#F9FAFB]">
         <div className="flex items-center justify-between border-b border-black/30 p-4 py-6">
           <p className="text-xl font-bold flex gap-3 items-center">
             {selectedUnit?.name} Head
           </p>
-          <Button Icon={TbPencil} text="Edit Leadership" />
+          <Button
+            Icon={TbPencil}
+            text="Edit Leadership"
+            onClick={() => setUpdateUnitLeadershipIsOpen(true)}
+          />
         </div>
         <div className="">
           <div className="grid grid-cols-6 p-4 py-4 gap-5 items-center border-b border-black/30 bg-black/5">

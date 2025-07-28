@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '../stores/authStore';
+import { showInfo } from '../utils/toast';
 
 export const useAutoLogout = () => {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -17,6 +18,7 @@ export const useAutoLogout = () => {
         setIsAuthenticated(false);
         setToken(null);
         setVerifyEmail(null);
+        showInfo('Login session expired');
         return;
       }
 
@@ -24,6 +26,7 @@ export const useAutoLogout = () => {
         setIsAuthenticated(false);
         setToken(null);
         setVerifyEmail(null);
+        showInfo('Login session expired');
       }, timeLeft);
 
       return () => clearTimeout(timer);

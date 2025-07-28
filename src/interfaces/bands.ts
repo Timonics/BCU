@@ -46,6 +46,10 @@ export interface BandResponse extends Omit<BandsResponse, 'data'> {
   data: BandDetails;
 }
 
+export interface BandMembersResponse extends Omit<BandsResponse, 'data'> {
+  data: MemberDetails[];
+}
+
 export interface BandDetails {
   id: number;
   name: string;

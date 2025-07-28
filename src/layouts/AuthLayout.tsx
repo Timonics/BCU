@@ -4,7 +4,7 @@ import background from "../assets/background.jpg";
 import logo from "../assets/logo.png";
 import { Outlet } from "react-router";
 import { useLoadingStore } from "../stores/loadingStore";
-import Loading from "../components/loading";
+import Loading from "../components/loader";
 
 const AuthLayout: React.FC = () => {
   const { isLoading } = useLoadingStore();

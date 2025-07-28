@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { leadershipType } from '../../constants/leadershipTypes';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useLeadership } from '../../hooks/useLeadership';
-import Loading from '../../components/loading';
+import Loading from '../../components/loader';
 import { useLoadingStore } from '../../stores/loadingStore';
 
 type LProps = {

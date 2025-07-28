@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import useStates from '../../hooks/useStates';
-import Loading from '../../components/loading';
+import Loading from '../../components/loader';
 import { useLoadingStore } from '../../stores/loadingStore';
 import { useUnit } from '../../hooks/useUnit';
 
@@ -26,7 +26,7 @@ const CreateNewUnit: React.FC = () => {
     <div className="fixed w-[40%] overflow-auto top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl bg-white shadow-xl flex flex-col items-center gap-4">
       <button
         onClick={() => setIsCreateNewUnitOpen(false)}
-        className="px-3 cursor-pointer py-1.5 pops text-sm rounded-lg bg-[#009AF4] text-white font-semibold ml-auto"
+        className="px-3 cursor-pointer py-1.5 pops text-sm rounded-lg bg-[#009AF4] hover:bg-[#0086f4] text-white font-semibold ml-auto"
       >
         Back
       </button>

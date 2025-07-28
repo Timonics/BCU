@@ -8,10 +8,11 @@ import { useAuthStore } from '../stores/authStore';
 import { useLeaderStore } from '../stores/leadershipStore';
 import { useLoadingStore } from '../stores/loadingStore';
 import { url } from '../utils/db_url';
+import { useNavigate } from 'react-router';
 
 export const useLeadership = () => {
   const dbUrl = `${url}leadership/`;
-
+  const navigate = useNavigate();
   const { token } = useAuthStore();
   const { setIsLoading } = useLoadingStore();
   const { setLeaderPositions } = useLeaderStore();
@@ -45,12 +46,12 @@ export const useLeadership = () => {
         },
       });
       toast.success('Successfully added leadership');
-      window.location.reload();
+      navigate(location.pathname, { state: { shouldRefresh: true } });
     } catch (err: any) {
       toast.error(
         err.response
           ? (err.response.data.message as string).includes('duplicate')
-            ? 'Leadership positon already exists'
+            ? 'Leadership position already exists'
             : err.response.data.message
           : err.message,
       );

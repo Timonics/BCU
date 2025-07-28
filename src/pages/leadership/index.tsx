@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { LuPenLine } from 'react-icons/lu';
 import AddLeadership from './addLeadership';
-import { TbEdit, TbEye, TbTrash } from 'react-icons/tb';
 import { useLeadership } from '../../hooks/useLeadership';
 import { useLeaderStore } from '../../stores/leadershipStore';
 import { useLoadingStore } from '../../stores/loadingStore';
-import Loading from '../../components/loading';
-import { useLocation } from 'react-router';
+import Loading from '../../components/loader';
+import { useLocation, useNavigate } from 'react-router';
+import Action from '../../components/action';
 
 const LeaderShip: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [showCreateLeadership, setShowCreateLeadership] =
     useState<boolean>(false);
   const { getAllLeadershipPosition } = useLeadership();
@@ -19,6 +20,8 @@ const LeaderShip: React.FC = () => {
   useEffect(() => {
     if (location.state?.shouldRefresh) setIsLoading(true);
     getAllLeadershipPosition();
+
+    navigate(location.pathname, { state: { shouldRefresh: false } });
   }, [location.state?.shouldRefresh]);
 
   const leadershipDataElements = leaderPositions.map((data) => (
@@ -28,18 +31,7 @@ const LeaderShip: React.FC = () => {
         {data?.membersCount} - {data?.type}(s)
       </p>
       <p>{data?.appointedAt.slice(0, data.appointedAt.indexOf('T'))}</p>
-      <p className="p-1 bg-gray-100 w-fit rounded-full items-center justify-center flex">
-        <button className="hover:bg-gray-200 p-1.5 rounded-full cursor-pointer transition ease-in-out duration-300 hover:text-blue-500 text-gray-600">
-          <TbEdit size={20} />
-        </button>
-        <hr />
-        <div className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-purple-800 text-gray-600">
-          <TbEye size={20} />
-        </div>
-        <button className="hover:bg-gray-200 p-1.5 rounded-full  cursor-pointer transition ease-in-out duration-300 hover:text-red-500 text-gray-600">
-          <TbTrash size={20} />
-        </button>
-      </p>
+      <Action />
     </div>
   ));
 

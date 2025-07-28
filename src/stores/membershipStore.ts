@@ -18,4 +18,6 @@ export const useMembershipStore = create<MembershipState>((set) => ({
   memberMetadata: null,
   setMemberMetadata: (value: Partial<MemberMetadata>) =>
     set({ memberMetadata: value }),
+  selectedMember: null,
+  setSelectedMember: (value: MemberDetails) => set({ selectedMember: value }),
 }));

@@ -1,15 +1,24 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import { useAuthStore } from '../stores/authStore';
 import { useLoadingStore } from '../stores/loadingStore';
 import { useUnitStore } from '../stores/unitStore';
-import { AddUnit, UnitResponse, UnitsResponse } from '../interfaces/unit';
+import {
+  AddUnit,
+  UnitMembersResponse,
+  UnitResponse,
+  UnitsResponse,
+} from '../interfaces/unit';
 import { url } from '../utils/db_url';
+import { showSuccess, showError } from '../utils/toast';
+import { useNavigate } from 'react-router';
+import useStates from './useStates';
 
 export const useUnit = () => {
   const dbUrl = `${url}units/`;
+  const navigate = useNavigate();
   const { token } = useAuthStore();
   const { setIsLoading } = useLoadingStore();
+  const { setIsCreateNewUnitOpen } = useStates();
   const { setUnits, setSelectedUnit, setUnitMetadata } = useUnitStore();
 
   const getAllUnits = async (
@@ -39,7 +48,7 @@ export const useUnit = () => {
         typeof unitsResponse.data === 'object' ? unitsResponse.data.meta : {},
       );
     } catch (err: any) {
-      toast.error(err.message);
+      showError(err.message);
       console.error('Error: ', err);
     } finally {
       setIsLoading(false);
@@ -57,7 +66,7 @@ export const useUnit = () => {
       const unitResponse = response.data as UnitResponse;
       setSelectedUnit(unitResponse.data);
     } catch (err: any) {
-      toast.error(err.message);
+      showError(err.message);
       console.error('Error: ', err);
     } finally {
       setIsLoading(false);
@@ -72,16 +81,64 @@ export const useUnit = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      toast.success('Unit added successfully');
-      window.location.reload();
+      showSuccess('Unit added successfully');
+      setIsCreateNewUnitOpen(false);
+      navigate(location.pathname, { state: { shouldRefresh: true } });
     } catch (err: any) {
       setIsLoading(false);
-      toast.error(err.message);
+      showError(err.message);
       console.error('Error: ', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { getAllUnits, getUnit, addUnit };
+  const fetchUnitMembersWithoutHead = async (unitId: number) => {
+    try {
+      const response = await axios.get(
+        `${dbUrl}unit-members/${unitId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const membersResponse = response.data as UnitMembersResponse;
+      return membersResponse.data;
+    } catch (err: any) {
+      setIsLoading(false);
+      showError(
+        err.response
+          ? err.response.data.message
+          : 'Error fetching band members',
+      );
+      console.error('Error: ', err);
+    }
+  };
+
+  const updateUnit = async (unitId: number, unitData: Partial<AddUnit>) => {
+    try {
+      await axios.put(`${dbUrl}update-unit/${unitId}`, unitData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      showSuccess('Successfully updated unit');
+      navigate(location.pathname, { state: { shouldRefresh: true } });
+    } catch (err: any) {
+      showError(
+        err.response.data ? err.response.data.message : 'Internal Server Error',
+      );
+      console.error('Error: ', err);
+    }
+  };
+
+  return {
+    getAllUnits,
+    getUnit,
+    addUnit,
+    fetchUnitMembersWithoutHead,
+    updateUnit,
+  };
 };

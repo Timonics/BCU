@@ -5,7 +5,7 @@ import { useBand } from '../../hooks/useBand';
 import { genders } from '../../constants/listings';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useLoadingStore } from '../../stores/loadingStore';
-import Loading from '../../components/loading';
+import Loading from '../../components/loader';
 
 const CreateNewBand: React.FC = () => {
   const { setIsCreateNewBandOpen } = useStates();
@@ -31,7 +31,7 @@ const CreateNewBand: React.FC = () => {
     <div className="fixed w-[40%] 2xl:h-[%] overflow-auto top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl bg-white shadow-xl flex flex-col items-center gap-4">
       <button
         onClick={() => setIsCreateNewBandOpen(false)}
-        className="px-3 cursor-pointer py-1.5 pops text-sm rounded-lg bg-[#009AF4] text-white font-semibold ml-auto"
+        className="px-3 cursor-pointer py-1.5 pops text-sm rounded-lg bg-[#009AF4] hover:bg-[#0086f4] text-white font-semibold ml-auto"
       >
         Back
       </button>
@@ -42,7 +42,7 @@ const CreateNewBand: React.FC = () => {
             Band Name<span className="text-red-600">*</span>
           </p>
           <input
-            className="member-input outline-none pl-2"
+            className="member-input outline-none pl-2 font-medium text-[#101828]/65"
             name="name"
             value={newBandData.name}
             onChange={handleChange}
@@ -86,10 +86,10 @@ const CreateNewBand: React.FC = () => {
         </div>
         <div className="flex flex-col gap-2">
           <p className="text-sm">
-            Founding Date <span className="text-red-600">*</span>
+            Founding Date (YYYY-MM-DD) <span className="text-red-600">*</span>
           </p>
           <input
-            className="member-input outline-none pl-2"
+            className="member-input outline-none pl-2 font-medium text-[#101828]/65"
             name="foundingDate"
             value={newBandData.foundingDate}
             onChange={handleChange}
