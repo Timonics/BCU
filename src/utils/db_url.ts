@@ -1,5 +1,1 @@
-const isProduction: boolean = true;
-
-export const url = isProduction
-  ? 'https://bcu-backend-ckde.onrender.com/'
-  : 'http://localhost:3000/';
+export const url = import.meta.env.VITE_DB_URL
