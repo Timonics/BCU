@@ -6,6 +6,7 @@ import { useLoadingStore } from '../stores/loadingStore';
 import { useLocation, useNavigate } from 'react-router';
 import { url } from '../utils/db_url';
 import { showError, showSuccess } from '../utils/toast';
+import { toast } from 'react-toastify';
 
 export const useMembership = () => {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ export const useMembership = () => {
       showSuccess('Successfully added member');
       navigate(`${location.pathname}`, { state: { shouldRefresh: true } });
     } catch (err: any) {
-      showError(
+      toast.error(
         err.response.data ? err.response.data.message : 'Internal Server Error',
       );
       console.error('Error: ', err);
