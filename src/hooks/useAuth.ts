@@ -5,9 +5,9 @@ import {
   AuthResponse,
 } from '../interfaces/auth';
 import { useLoadingStore } from '../stores/loadingStore';
+import { toast } from 'react-toastify';
 import { useAuthStore } from '../stores/authStore';
 import { url } from '../utils/db_url';
-import { showError, showSuccess } from '../utils/toast';
 
 export const useAuth = () => {
   const dbUrl = `${url}auth/`;
@@ -22,9 +22,9 @@ export const useAuth = () => {
 
       setToken(registerResponse.data.access_token);
 
-      showSuccess('Successfully registered admin');
+      toast.success('Successfully registered admin');
     } catch (err: any) {
-      showError('Error registering admin');
+      toast.error('Error registering admin');
       console.error('Error: ', err);
     } finally {
       setIsLoading(false);
@@ -40,9 +40,9 @@ export const useAuth = () => {
       setToken(loginResponse.data.access_token);
 
       setIsAuthenticated(true);
-      showSuccess('Successfully logged in');
+      toast.success('Successfully logged in');
     } catch (err: any) {
-      showError(
+      toast.error(
         err.response
           ? err.response.data.statusCode === 500
             ? 'Internal Server Error'
@@ -58,9 +58,9 @@ export const useAuth = () => {
   const verifyEmail = async (verifyData: { email: string; otp: string }) => {
     try {
       await axios.post(`${dbUrl}verify-email`, verifyData);
-      showSuccess('Email verified successfully');
+      toast.success('Email verified successfully');
     } catch (err: any) {
-      showError(err.message);
+      toast.error(err.message);
       setIsLoading(false);
       console.error('Error: ', err);
     }
