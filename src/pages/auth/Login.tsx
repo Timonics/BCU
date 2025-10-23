@@ -20,7 +20,10 @@ const Login: React.FC = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    adminSignin(loginData);
+    adminSignin({
+      email: loginData.email.toLowerCase(),
+      password: loginData.password,
+    });
   };
 
   return (
