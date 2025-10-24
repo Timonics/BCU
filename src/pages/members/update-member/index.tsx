@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { updateMemberSteps } from '../../../constants/member_management_steps';
 
@@ -20,6 +20,7 @@ const UpdateMember = ({
   member: MemberDetails | null;
   setUpdateMemberIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const navigate = useNavigate();
   const location = useLocation();
   const pathName = location.pathname.split('/').at(-1);
 
@@ -27,6 +28,7 @@ const UpdateMember = ({
   const { updateMemberDetails, setUpdateMembersDetails } = useStates();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [active, setActive] = useState<string>('update-info');
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -42,20 +44,18 @@ const UpdateMember = ({
   const updateMemberStepsElements = updateMemberSteps.map((step) => {
     const Icon = step.icon;
     return (
-      <NavLink
-        end
-        to={''}
-        className={({ isActive }) =>
-          `py-2 px-4 text-sm text-[#1E1E1E] flex items-center gap-2 ${
-            isActive && 'bg-[#009AF4]/20 font-bold text-[#009AF4]'
-          }`
-        }
+      <div
+        key={step.step}
+        onClick={() => setActive(step.to)}
+        className={`py-2 px-4 text-sm text-[#1E1E1E] flex items-center gap-2 cursor-pointer ${
+          active === step.to && 'bg-[#009AF4]/20 font-bold text-[#009AF4]'
+        }`}
       >
         <div className="p-1.5 rounded-md shadow-md bg-[#fafdff]">
           <Icon size={17} />
         </div>
         {step.step}
-      </NavLink>
+      </div>
     );
   });
   return (
@@ -85,28 +85,80 @@ const UpdateMember = ({
           >
             Back
           </button>
-          <div className="flex flex-col gap-5">
-            <p
-              className={`${
-                pathName === 'summary' ? 'text-3xl' : 'text-2xl'
-              }  pops font-bold`}
+          {active === 'update-info' ? (
+            <>
+              <div className="flex flex-col gap-5">
+                <p
+                  className={`${
+                    pathName === 'summary' ? 'text-3xl' : 'text-2xl'
+                  }  pops font-bold`}
+                >
+                  {pathName === 'summary'
+                    ? 'Summary'
+                    : 'Update member information correctly'}
+                </p>
+              </div>
+              <div className="flex flex-col gap-10">
+                <UpdatePersonalInfo member={member!} />
+                <UpdateChurchInfo member={member!} />
+                <UpdateAcademics member={member!} />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="h-full flex flex-col">
+                <p className="text-2xl pops font-bold">Update Member Status</p>
+                <div className="flex flex-col gap-4 p-4">
+                  <button
+                    onClick={async () => {
+                      setIsLoading(true);
+                      try {
+                        await updateMember(member!.id, { status: 'approved' });
+                      } finally {
+                        setUpdateMembersDetails({});
+                        setUpdateMemberIsOpen(false);
+                        setIsLoading(false);
+
+                        navigate(location.pathname, {
+                          state: { shouldRefresh: true },
+                        });
+                      }
+                    }}
+                    className="p-2 rounded-lg pops font-bold bg-green-400 hover:bg-green-500"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={async () => {
+                      setIsLoading(true);
+                      try {
+                        await updateMember(member!.id, { status: 'suspended' });
+                      } finally {
+                        setUpdateMembersDetails({});
+                        setUpdateMemberIsOpen(false);
+                        setIsLoading(false);
+
+                        navigate(location.pathname, {
+                          state: { shouldRefresh: true },
+                        });
+                      }
+                    }}
+                    className="p-2 rounded-lg pops font-bold bg-red-500 hover:bg-red-600"
+                  >
+                    Suspend
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+          {active === 'update-info' && (
+            <button
+              className="px-4 py-2 pops text-xl rounded-lg cursor-pointer bg-[#009AF4] text-white font-semibold mx-auto my-4"
+              onClick={handleSubmit}
             >
-              {pathName === 'summary'
-                ? 'Summary'
-                : 'Update member information correctly'}
-            </p>
-          </div>
-          <div className="flex flex-col gap-10">
-            <UpdatePersonalInfo member={member!} />
-            <UpdateChurchInfo member={member!} />
-            <UpdateAcademics member={member!} />
-          </div>
-          <button
-            className="px-4 py-2 pops text-xl rounded-lg cursor-pointer bg-[#009AF4] text-white font-semibold mx-auto my-4"
-            onClick={handleSubmit}
-          >
-            Update member
-          </button>
+              Update member
+            </button>
+          )}
         </div>
       </div>
       {isLoading && <UpdateLoader />}

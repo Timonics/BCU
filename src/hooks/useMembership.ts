@@ -7,9 +7,11 @@ import { useLocation, useNavigate } from 'react-router';
 import { url } from '../utils/db_url';
 import { showError, showSuccess } from '../utils/toast';
 import { toast } from 'react-toastify';
+import useStates from './useStates';
 
 export const useMembership = () => {
   const navigate = useNavigate();
+  const { setAddMembersDetails } = useStates();
   const location = useLocation();
   const { token } = useAuthStore();
   const { setIsLoading, setMemberLoading } = useLoadingStore();
@@ -85,11 +87,60 @@ export const useMembership = () => {
         },
       });
 
+      setAddMembersDetails({
+        firstName: '',
+        lastName: '',
+        otherNames: '',
+        gender: '',
+        email: '',
+        phoneNumber: '',
+        dateOfBirth: '',
+        maritalStatus: '',
+        stateOfOrigin: '',
+        address: '',
+        country: '',
+        residentialState: '',
+        city: '',
+        localGovernmentArea: '',
+        status: '',
+        nextOfKinFullName: '',
+        nextOfKinRelationship: '',
+        nextOfKinPhoneNumber: '',
+        baptismalStatus: false,
+        locationOfBaptism: '',
+        institutionName: '',
+        qualification: '',
+        courseOfStudy: '',
+        startDate: '',
+        endDate: '',
+        professionalQualifications: '',
+        vocationalQualification: '',
+        placeOfWork: '',
+        officeAddress: '',
+        workState: '',
+        workLGA: '',
+        workCountry: '',
+        bandId: 0,
+        unitId: 0,
+        leadingBandId: 0,
+        leadingPositionId: 0,
+      });
+
       showSuccess('Successfully added member');
-      navigate(`${location.pathname}`, { state: { shouldRefresh: true } });
+      navigate(`${location.pathname.split('/').slice(0, 2).join('/')}`, {
+        state: { shouldRefresh: true },
+      });
     } catch (err: any) {
       toast.error(
-        err.response.data ? err.response.data.message : 'Internal Server Error',
+        err.response
+          ? err.response.status === 500
+            ? 'Internal Server Error'
+            : typeof err.response.data.message === 'object'
+              ? Array.isArray(err.response.data.message.message)
+                ? err.response.data.message.message[0]
+                : err.response.data.message.m.essage
+              : err.response.data.message
+          : 'Error Fetching members',
       );
       console.error('Error: ', err);
     } finally {
@@ -120,5 +171,22 @@ export const useMembership = () => {
     }
   };
 
-  return { getAllMembers, getMember, addMember, updateMember };
+  const deleteMember = async (memberId: number) => {
+    try {
+      await axios.delete(`${dbUrl}${memberId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      showSuccess(`Member deleted successfully.`);
+      navigate(`${location.pathname}`, {
+        state: { shouldRefresh: true },
+      });
+    } catch (err: any) {
+      showError('Failed to delete member. Please try again.');
+    }
+  };
+
+  return { getAllMembers, getMember, addMember, updateMember, deleteMember };
 };

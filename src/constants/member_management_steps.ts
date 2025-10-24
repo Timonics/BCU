@@ -27,6 +27,12 @@ export const updateMemberSteps = [
   {
     step: 'Update Member Information',
     icon: FiUser,
+    to: 'update-info',
+  },
+  {
+    step: 'Update Member Status',
+    icon: FiUsers,
+    to: 'update-status',
   },
 ];
 export const updateBandSteps = [

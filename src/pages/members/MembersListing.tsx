@@ -14,6 +14,7 @@ import useStates from '../../hooks/useStates';
 import UpdateMember from './update-member';
 import Action from '../../components/action';
 import ViewMember from './view-member';
+import DeleteModal from '../../components/delete-modal';
 
 interface MemberProps {
   gender: string | null;
@@ -57,6 +58,8 @@ const MembersListing = ({
     selectedMember,
     viewMemberIsOpen,
     setViewMemberIsOpen,
+    deleteMemberIsOpen,
+    setDeleteMemberIsOpen
   } = useStates();
   const { isLoading, setIsLoading } = useLoadingStore();
   const { members, memberMetadata } = useMembershipStore();
@@ -169,6 +172,10 @@ const MembersListing = ({
             }}
             onView={() => {
               setViewMemberIsOpen(true);
+              setSelectedMember(member);
+            }}
+            onDelete={() => {
+              setDeleteMemberIsOpen(true);
               setSelectedMember(member);
             }}
           />
@@ -404,6 +411,19 @@ const MembersListing = ({
           <ViewMember
             member={selectedMember!}
             setViewMemberIsOpen={setViewMemberIsOpen}
+          />
+        </>
+      )}
+      {deleteMemberIsOpen && (
+        <>
+          <div
+            onClick={() => setDeleteMemberIsOpen(false)}
+            className="fixed top-0 right-0 w-full backdrop-blur-sm h-full"
+          />
+          <DeleteModal
+            data={selectedMember!}
+            type={"member"}
+            setDeleteMemberIsOpen={setDeleteMemberIsOpen}
           />
         </>
       )}

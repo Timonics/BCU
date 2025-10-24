@@ -14,7 +14,7 @@ const StateProvider: React.FC<AppProps> = ({ children }) => {
   const [isCreateNewClassOpen, setIsCreateNewClassOpen] =
     useState<boolean>(false);
   const [addMemberDetails, setAddMembersDetails] = useState<
-    Partial<MemberDetails>
+    Omit<Partial<MemberDetails>, "leadingBandId" | "leadingPositionId">
   >({});
   const [updateMemberDetails, setUpdateMembersDetails] = useState<
     Partial<MemberDetails>
